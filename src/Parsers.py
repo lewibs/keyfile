@@ -98,6 +98,10 @@ def parse_KEY(items:List[str])->List[BaseToken]:
     return tokens
 
 def parse_LAYER(items:List[str])->List[BaseToken]:
+    for key in items[3:]:
+        if key not in TOKENS:
+            raise Exception(f"KEY {key} not defined for LAYER {items[1]}")
+
     tokens = [
         LayerToken(
             name=items[1],

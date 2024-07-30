@@ -10,4 +10,3 @@ INJECT path
 todo
 add in multi press layers
 FLUSH protection (NOT SURE WHAT THIS WAS)
-infinate INJECT loop protection

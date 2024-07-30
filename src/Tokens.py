@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, List, Callable, Tuple
+from typing import List
 
 class Token(Enum):
     COMMENT="COMMENT",
