@@ -14,6 +14,9 @@ class BaseToken():
         self.name = name
         self.val = None
 
+    def __str__(self):
+        pass
+
 class ColorToken(BaseToken):
     def __init__(self, name:str, r:int, g:int, b:int):
         super().__init__(
@@ -23,6 +26,9 @@ class ColorToken(BaseToken):
         self.r = r
         self.g = g
         self.b = b
+    
+    def __str__(self):
+        return f"COLOR {self.name} {self.r} {self.g} {self.b}"
 
 class KeyToken(BaseToken):
     def __init__(self, name:str, keycode:str, color:str):
@@ -33,6 +39,9 @@ class KeyToken(BaseToken):
 
         self.keycode = keycode
         self.color = color
+    
+    def __str__(self):
+        return f"KEY {self.name} {self.keycode} {self.color}"
 
 class LayerToken(BaseToken):
     def __init__(self, name:str, layout:str, keys:List[str]):
@@ -43,3 +52,9 @@ class LayerToken(BaseToken):
 
         self.layout = layout
         self.keys = keys
+
+    def __str__(self):
+        res = f"LAYER {self.name} {self.layout}"
+        for key in self.keys:
+            res += " " + key
+        return res

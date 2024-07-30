@@ -1,11 +1,9 @@
 from typing import Dict, List, Callable
 from Tokens import Token, BaseToken, ColorToken, KeyToken, LayerToken
+from env import PATH
 
 TOKENS = {}
 FILES = {}
-
-#TODO make this whatever the path to this program is in their pc
-PATH = "C:/Users/lewibs/github/keyfile" 
 
 # Define the type for functions in TOKEN_PARSERS
 ParserFunction = Callable[[List[str]], List[BaseToken]]

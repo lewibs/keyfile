@@ -9,6 +9,6 @@ INJECT path
 
 todo
 add in multi press layers
-FLUSH protection (NOT SURE WHAT THIS WAS)
 update macros so that they can refference keys already defined (???)
 consider changing the LAYOUT macros to width height vals and auto generating the macro define
+set it up to run with QMK so it can make the .bin right away and delete the keymap files
