@@ -1,0 +1,16 @@
+COMMENT a COLOR is defined as COLOR NAME:string R:int G:int B:int
+COLOR c_none 0 0 0
+
+COLOR c_red 255 0 0
+COLOR c_green 0 255 0
+COLOR c_blue 0 0 255
+COLOR c_orange 255 165 0
+COLOR c_yellow 255 255 0
+COLOR c_purple 128 0 128
+COLOR c_cyan 0 255 255
+COLOR c_magenta 255 0 255
+COLOR c_pink 255 192 203
+COLOR c_brown 165 42 42
+COLOR c_gray 128 128 128
+COLOR c_black 0 0 0
+COLOR c_white 255 255 255

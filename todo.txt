@@ -1,0 +1,12 @@
+Tags:
+all tags must be at the start of a new line
+
+COLOR NAME R G B
+KEY NAME KEY_CODE COLOR
+MO NAME LAYER_NAME COLOR
+COMMENT ANYTHING
+LAYER NAME ...KEY
+
+
+todo
+add in multi press layers
