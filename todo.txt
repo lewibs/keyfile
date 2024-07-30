@@ -3,10 +3,11 @@ all tags must be at the start of a new line
 
 COLOR NAME R G B
 KEY NAME KEY_CODE COLOR
-MO NAME LAYER_NAME COLOR
 COMMENT ANYTHING
-LAYER NAME ...KEY
-
+LAYER NAME LAYOUT_MACRO ...KEY
+INJECT path
 
 todo
 add in multi press layers
+FLUSH protection (NOT SURE WHAT THIS WAS)
+infinate INJECT loop protection

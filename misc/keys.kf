@@ -73,11 +73,11 @@ KEY space KC_SPC c_none
 
 KEY [ KC_LBRC c_none
 KEY ] KC_RBRC c_none
-KEY \ KC_BSLS c_none
 KEY ; KC_SCLN c_none
 KEY ' KC_QUOT c_none
 KEY , KC_COMM c_none
 KEY . KC_DOT c_none
+KEY \ KC_BSLS c_none
 KEY / KC_SLSH c_none
 KEY ` KC_GRAVE c_none
 KEY ! KC_EXLM c_none
@@ -95,8 +95,6 @@ KEY - KC_MINUS c_none
 KEY % KC_PERC c_none
 KEY + KC_PLUS c_none
 KEY ~ KC_TILD c_none
-KEY \ KC_BSLS c_none
-KEY / KC_SLASH c_none
 KEY * KC_ASTR c_none
 KEY < KC_LABK c_none
 KEY > KC_RABK c_none
