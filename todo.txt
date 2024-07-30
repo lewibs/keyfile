@@ -10,3 +10,5 @@ INJECT path
 todo
 add in multi press layers
 FLUSH protection (NOT SURE WHAT THIS WAS)
+update macros so that they can refference keys already defined (???)
+consider changing the LAYOUT macros to width height vals and auto generating the macro define

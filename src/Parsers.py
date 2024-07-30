@@ -90,10 +90,13 @@ def parse_COLOR(items:List[str])->List[ColorToken]:
     return tokens
 
 def parse_KEY(items:List[str])->List[BaseToken]:
+    if items[3] not in TOKENS:
+        raise Exception(f"COLOR {items[3]} not defined for KEY {items[1]}")
+
     tokens = [KeyToken(
         name=items[1],
         keycode=items[2],
-        color=[3],
+        color=items[3],
     )]
     return tokens
 

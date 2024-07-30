@@ -67,6 +67,7 @@ KEY tab KC_TAB c_none
 KEY ctl KC_LCTL c_none
 KEY alt KC_LALT c_none
 KEY os KC_LGUI c_none
+KEY sft KC_LSFT c_none
 
 KEY enter KC_ENT c_none
 KEY space KC_SPC c_none
