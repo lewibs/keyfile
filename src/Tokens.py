@@ -17,6 +17,9 @@ class BaseToken():
     def __str__(self):
         pass
 
+    def transpile(self):
+        pass
+
 class ColorToken(BaseToken):
     def __init__(self, name:str, r:int, g:int, b:int):
         super().__init__(
@@ -30,6 +33,9 @@ class ColorToken(BaseToken):
     def __str__(self):
         return f"COLOR {self.name} {self.r} {self.g} {self.b}"
 
+    def transpile(self):
+        return f"{"{"}{self.r},{self.g},{self.b}{"}"}"
+
 class KeyToken(BaseToken):
     def __init__(self, name:str, keycode:str, color:str):
         super().__init__(
@@ -42,6 +48,9 @@ class KeyToken(BaseToken):
     
     def __str__(self):
         return f"KEY {self.name} {self.keycode} {self.color}"
+    
+    def transpile(self):
+        return f"{self.keycode}"
 
 class LayerToken(BaseToken):
     def __init__(self, name:str, layout:str, keys:List[str]):
@@ -58,3 +67,18 @@ class LayerToken(BaseToken):
         for key in self.keys:
             res += " " + key
         return res
+    
+    def transpile(self, TOKENS):
+        keys = f"{self.layout}("
+        colors = "{"
+
+        for key in self.keys:
+            key = TOKENS[key]
+            color = TOKENS[key.color]
+            keys += key.transpile() + ","
+            colors += color.transpile() + ","
+
+        colors = colors[:-1] + "}"
+        keys = keys[:-1] + ")"
+
+        return self.name, keys, colors

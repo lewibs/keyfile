@@ -21,9 +21,4 @@ def clean_tmp_dir(path:str)->None:
         shutil.rmtree(path)
 
 def move_directory(src: str, dest: str) -> None:
-    """Moves the directory from src to dest."""
-    try:
-        shutil.move(src, dest)
-        print(f"Moved directory from {src} to {dest}")
-    except Exception as e:
-        print(f"Error moving directory: {e}")
+    shutil.move(src, dest)
