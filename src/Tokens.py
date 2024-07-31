@@ -51,6 +51,9 @@ class KeyToken(BaseToken):
     
     def transpile(self):
         return f"{self.keycode}"
+    
+class DualKeyToken(BaseToken):
+    
 
 class LayerToken(BaseToken):
     def __init__(self, name:str, layout:str, keys:List[str]):
