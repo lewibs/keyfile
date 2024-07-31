@@ -20,13 +20,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 
-const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
+const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT+1][3] = {
 //LEDMAP_INSERTION_POINT
 };
 
 //THIS IS NEEDED FOR SETTING THE COLOR BASED ON THE LAYER
 bool rgb_matrix_indicators_user(void) {
-  int layer = biton32(layer_state)
+  int layer = biton32(layer_state);
 
   for (int i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
     HSV hsv = {
@@ -49,5 +49,6 @@ bool rgb_matrix_indicators_user(void) {
 //THIS IS NEEDED for double layers
 uint8_t layer_state_set_user(uint8_t state) {
   //TODO figure out how to insert here
-  return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+  //return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+  return 0
 }

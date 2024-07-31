@@ -15,32 +15,30 @@ KEY syms MO(_SYMS) c_none
 KEY nums MO(_NUMS) c_none
 KEY mouse MO(_MOUSE) c_none
 
-ctl     alt     fn      sft     syms    space   no       nums    mouse   no      os      alt
-
 LAYER _SYMS LAYOUT_planck_grid
 no      no      no      no      no      trans   trans    no      !       {       }        @            
 no      no      no      no      no      `       trans    no      #       (       )        $           
 no      no      no      no      no      trans   trans    no      |       [       ]        &          
-trans   trans   trans   trans   trans   trans   no       trans   trans   trans   trans    trans
+trans   trans   trans   trans   trans   trans   trans    trans   trans   trans   trans    trans
 
 LAYER _NUMS LAYOUT_planck_grid
 0       1       2       3       no      trans   trans    no      %       ~       \        no
 .       4       5       6       no      `       trans    no      -       +       /        *         
 =       7       8       9       no      calc    trans    no      no      <       >        ^         
-trans   trans   trans   trans   trans   trans   no       trans   trans   trans   trans    trans
+trans   trans   trans   trans   trans   trans   trans    trans   trans   trans   trans    trans
 
 COMMENT needs to be added with multi press macro
 LAYER _DELETE LAYOUT_planck_grid
 no      no      no      no      no      trans   trans    no      no      no      no       no
 d_line  tab     d_word  del     no      no      trans    no      bac     b_word  enter    b_line
 no      no      no      no      no      trans   trans    no      no      no      no       no
-trans   trans   trans   trans   trans   trans   no       trans   trans   trans   trans    trans
+trans   trans   trans   trans   trans   trans   trans    trans   trans   trans   trans    trans
 
 LAYER _MOUSE LAYOUT_planck_grid
 no     r_clk    m_up    l_clk   no      trans   trans    no      enter   up      no       no
 no     m_left   m_down  m_right no      no      trans    w_left  left    down    right    w_right
 p_left p_up     no      p_down  p_right trans   trans    no      home    no      end      no
-trans   trans   trans   trans   trans   trans   no       trans   trans   trans   trans    trans
+trans   trans   trans   trans   trans   trans   trans    trans   trans   trans   trans    trans
 
 LAYER _FN LAYOUT_planck_grid
 f1      f2      f3      f4      f5      f6      f7       f8      f9      f10      f11      f12
