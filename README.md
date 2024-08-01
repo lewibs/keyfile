@@ -13,7 +13,22 @@ All instructions will start with a token. The parser will read the lines in as t
 |----------|-------------------------------------------------------|--------------------------------------------------|
 | INJECT   | Include external files or paths                       | `INJECT FILE`                                    |
 | COLOR    | Define a color with the name and RGB values (0-255)   | `COLOR NAME R G B`                               |
-| KEY      | Define a key with its name, key code, and color       | `KEY NAME KEY_CODE COLOR`                        |
+| KEY      | Define a key with its name, key code, and color       | `KEY NAME ...MODIFYER KEY_CODE COLOR`            |
 | COMMENT  | Add comments to your code                             | `COMMENT ANYTHING`                               |
 | LAYER    | Define a layer with its name, layout macros, and keys | `LAYER NAME ...KEY`                              |
 | KEYBOARD | Defines the keyboard that will be created             | `KEYBOARD ROWS COLS ...LAYER`                    |
+
+## Grammar
+
+
+## TODO
+todo
+set it up to run with QMK so it can make the .bin right away and delete the keymap files
+make compiler
+update readme
+custom modifyer codes?
+remove the layer_ref and similar classes and jsut use KEY or LAYER
+
+doing
+think about keycode parsing to allow usage of other keys
+tri layer keys

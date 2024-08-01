@@ -33,6 +33,8 @@ def get_sentences_from_keyfile(kf:str):
             print(string)
     except Exception as e:
         print("UNEXPECTED_ERROR: Ran into an unexpected issue. This is most likely not an issue with your code. This error occured while parsing the keyfile")
+        raise e
+
 
     return sentences
 

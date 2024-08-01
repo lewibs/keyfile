@@ -1,7 +1,0 @@
-todo
-set it up to run with QMK so it can make the .bin right away and delete the keymap files
-make compiler
-update readme
-
-doing
-tri layer keys

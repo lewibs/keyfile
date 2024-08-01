@@ -128,17 +128,18 @@ KEY home KC_HOME c_none
 KEY end KC_END c_none
 KEY trans KC_TRANSPARENT c_none
 KEY calc KC_CALCULATOR c_none
-KEY d_line LCTL(LSFT(KC_DELETE)) c_none
-KEY d_word LCTL(KC_DELETE) c_none
-KEY b_word LCTL(KC_BSPC) c_none
-KEY b_line LCTL(LSFT(KC_BSPC)) c_none
-KEY w_left LCTL(KC_LEFT) c_none
-KEY w_right RCTL(KC_RIGHT) c_none
 KEYBOARD keyboard 4 12 _syms _nums _delete _mouse _fn _base
-KEY fn MO(_fn) c_none
-KEY syms MO(_syms) c_none
-KEY nums MO(_nums) c_none
-KEY mouse MO(_mouse) c_none
+KEY d_line LCTL LSFT del del c_none
+KEY d_word LCTL del del c_none
+KEY b_word LCTL bac bac c_none
+KEY b_line LCTL LSFT bac bac c_none
+KEY w_left LCTL left left c_none
+KEY w_right RCTL right right c_none
+KEY fn MO _fn c_none
+KEY syms MO _syms c_none
+KEY nums MO _nums c_none
+KEY mouse MO _mouse c_none
+KEY DUAL _syms _nums _delete
 LAYER _base q w e r t del bac y u i o p a s d f g ' enter h j k l ; z x c v b esc tab n m , . / ctl alt fn sft syms space no nums mouse no os alt
 LAYER _syms no no no no no trans trans no ! { } @ no no no no no ` trans no # ( ) $ no no no no no trans trans no | [ ] & trans trans trans trans trans trans trans trans trans trans trans trans
 LAYER _nums 0 1 2 3 no trans trans no % ~ \ no . 4 5 6 no ` trans no - + / * = 7 8 9 no calc trans no no < > ^ trans trans trans trans trans trans trans trans trans trans trans trans

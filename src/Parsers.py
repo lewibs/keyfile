@@ -20,14 +20,20 @@ class Words:
     KEYCODE="keycode"
     COLOR_REF="color_ref"
     KEY_REF="key_ref"
+    LAYER_REF="layer_ref"
     DECLARE_LAYER="declare_layer"
+    KEY_MODIFIER="key_modifier"
+    LAYER_MODIFIER="layer_modifier"
 
 class GlobalDefinitions:
     KEYBOARD="keyboard"
+    DUAL="DUAL"
 
 SENTENCES = {}
 SENTENCES_ARR = []
 FILES = {}
+KEY_MODIFIERS = {"LSFT", "RSFT", "LCTL", "RCTL", "LALT", "RALT"}
+LAYER_MODIFIERS = {"MO", "TG", "TT"}
 
 def parse_keyfile(path:str)->None:
     if path in FILES:
@@ -77,6 +83,28 @@ def _initialize(word:str, sentence):
     
     SENTENCES[word] = sentence
 
+def _is_initialized(word:str, token:str):
+    if word in SENTENCES:
+        if isinstance(SENTENCES[word], str):
+            return SENTENCES[word] == token
+        else:
+            return SENTENCES[word].type == token
+
+def _is_keycode(word:str):
+    if _is_initialized(word, Token.KEY):
+        return True
+
+    return word.startswith("KC_")
+
+def _is_layer_modifier(word:str) -> bool:
+    return word in LAYER_MODIFIERS
+
+def _is_key_modifier(word:str) -> bool:
+    return word in KEY_MODIFIERS
+
+def _is_modifier(word: str) -> bool:
+    return _is_key_modifier(word) or _is_layer_modifier(word)
+
 class BaseSentence():
     def __init__(self, sentence_type, grammer):
         self.type = sentence_type
@@ -90,11 +118,13 @@ class BaseSentence():
             return False
 
     def consume(self, word:str):
+
         if self.is_complete():
             raise ParserException("Syntax Error: Expected new token")
         
         res = getattr(self, f"consume_{self.grammer.pop(0)}")(word)
         self.words.append(word)
+
         return res
 
     def consume_token(self, word:str):
@@ -119,17 +149,21 @@ class BaseSentence():
             raise ParserException("Value Error: Not a uint")
 
     def consume_ref(self, token_type:str, word:str):
+        if token_type not in Token.__dict__.values():
+            raise ParserException("Syntax Error: Not a supported token")
+
         if word not in SENTENCES:
             raise ParserException(f"Not Defined: {token_type} {word} is used before being declared")
-        
-        if word in SENTENCES and not isinstance(SENTENCES[word], Sentences[token_type]):
-            raise ParserException("Syntax Error: Not a supported token")
 
     def consume_color_ref(self, word:str):
         self.consume_ref(Token.COLOR, word)
 
     def consume_key_ref(self, word:str):
-        self.consume_ref(Token.KEY, word)
+        if not _is_keycode(word):
+            self.consume_ref(Token.KEY, word)
+
+    def consume_layer_ref(self, word:str):
+        self.consume_ref(Token.LAYER, word)
 
     def consume_declare(self, sentence_type, word):
         _declare(word, sentence_type)
@@ -138,9 +172,27 @@ class BaseSentence():
         self.consume_declare(Token.LAYER, word)
 
     def consume_keycode(self, word:str):
-        #TODO make it so that no KC_ keycode is defined? or if it wants it can refer to keys that are local?
-        #TODO check that a layer swap would occur?
-        pass
+        if _is_modifier(word):
+            if _is_key_modifier(word):
+                self.grammer.insert(0, Words.KEY_REF)
+                self.grammer.insert(0, Words.KEY_MODIFIER)
+            elif _is_layer_modifier(word):
+                self.grammer.insert(0, Words.LAYER_REF)
+
+
+    def consume_key_modifier(self, word: str):
+        if not _is_key_modifier(word):
+            if _is_keycode(word):
+                # Turns to nothing
+                self.consume(word)
+                return
+            raise ParserException(f"Syntax Error: {word} is not a valid KEY_MODIFIER")
+        
+        self.grammer.insert(0, Words.KEY_MODIFIER)
+    
+    def consume_layer_modifier(self, word:str):
+        if not _is_layer_modifier(word):
+            raise ParserException(f"Syntax Error: {word} is not a valid LAYER_MODIFIER")
 
     def consume_comment(self, word:str):
         self.grammer.append(Words.COMMENT)
@@ -151,9 +203,26 @@ class ColorSentence(BaseSentence):
         self.consume(token)
 
 class KeySentence(BaseSentence):
+    _dual_keys = 0
+
     def __init__(self, token):
-        super().__init__(Token.KEY, [Words.TOKEN, Words.INITIALIZE, Words.KEYCODE, Words.COLOR_REF])
+        super().__init__(Token.KEY, [Words.TOKEN, Words.INITIALIZE])
+        # it will be trailed by either this
+        # Words.MODIFIER, Words.KEYCODE, Words.COLOR_REF
+        # or
+        # Words.LAYER_REF Words.LAYER_REF Words.LAYER_REF
         self.consume(token)
+
+    def consume_initialize(self, word: str):
+        if word == GlobalDefinitions.DUAL:
+            KeySentence._dual_keys += 1
+            word = f"{GlobalDefinitions.DUAL}_{KeySentence._dual_keys}"
+            self.grammer += [Words.LAYER_REF, Words.LAYER_REF, Words.LAYER_REF]
+        else:
+            self.grammer += [Words.KEYCODE, Words.COLOR_REF]
+
+        super().consume_initialize(word)
+
 
 class LayerSentence(BaseSentence):
     def __init__(self, token):

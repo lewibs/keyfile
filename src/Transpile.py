@@ -13,6 +13,7 @@ def write_to_c(path:str, sentences)->None:
     ledmap = ""
     keymap_cols = ""
     keymap_rows = ""
+    dual_keys = ""
 
     for sentence in sentences:
         if sentence.type == Token.LAYER:
