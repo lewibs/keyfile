@@ -6,11 +6,11 @@ INJECT keys.kf
 KEYBOARD 4 12 _syms _nums _delete _mouse _fn _base
 
 KEY d_line LCTL LSFT del c_none
-KEY d_word LCTL del c_none
-KEY b_word LCTL bac c_none
-KEY b_line LCTL LSFT bac c_none
-KEY w_left LCTL left c_none
-KEY w_right RCTL right c_none
+KEY d_word LCTL KC_DELETE c_none
+KEY b_word LCTL KC_BSPC c_none
+KEY b_line LCTL LSFT KC_BSPC c_none
+KEY w_left LCTL KC_LEFT c_none
+KEY w_right RCTL KC_RIGHT c_none
 
 KEY fn MO _fn c_none
 KEY syms MO _syms c_none

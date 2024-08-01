@@ -59,17 +59,6 @@ def main() -> None:
     write_sentences_to_linked_file(args, sentences)
     write_to_c(args.output, sentences)
 
-    # path = get_tmp_dir(kb_name)
-
-    # create_c_file(path, tokens)
-
-    # if args.km:
-    #     move_directory(path, args.km)
-
-    # #TODO make bin here...
-
-    # clean_tmp_dir(path)
-
 
 if __name__ == "__main__":
     main()

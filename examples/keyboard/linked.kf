@@ -130,11 +130,11 @@ KEY trans KC_TRANSPARENT c_none
 KEY calc KC_CALCULATOR c_none
 KEYBOARD keyboard 4 12 _syms _nums _delete _mouse _fn _base
 KEY d_line LCTL LSFT del del c_none
-KEY d_word LCTL del del c_none
-KEY b_word LCTL bac bac c_none
-KEY b_line LCTL LSFT bac bac c_none
-KEY w_left LCTL left left c_none
-KEY w_right RCTL right right c_none
+KEY d_word LCTL KC_DELETE KC_DELETE c_none
+KEY b_word LCTL KC_BSPC KC_BSPC c_none
+KEY b_line LCTL LSFT KC_BSPC KC_BSPC c_none
+KEY w_left LCTL KC_LEFT KC_LEFT c_none
+KEY w_right RCTL KC_RIGHT KC_RIGHT c_none
 KEY fn MO _fn c_none
 KEY syms MO _syms c_none
 KEY nums MO _nums c_none

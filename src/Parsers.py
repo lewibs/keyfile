@@ -223,7 +223,6 @@ class KeySentence(BaseSentence):
 
         super().consume_initialize(word)
 
-
 class LayerSentence(BaseSentence):
     def __init__(self, token):
         super().__init__(Token.LAYER, [Words.TOKEN, Words.INITIALIZE]) #...Words.KEY_REF

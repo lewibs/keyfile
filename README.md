@@ -24,11 +24,15 @@ All instructions will start with a token. The parser will read the lines in as t
 ## TODO
 todo
 set it up to run with QMK so it can make the .bin right away and delete the keymap files
-make compiler
+
 update readme
-custom modifyer codes?
-remove the layer_ref and similar classes and jsut use KEY or LAYER
+
+remove hardcoded IDX values from transpiler and have the sentenes output them. since you have tokens from picking them up just make rules for converting them to c and them make a translate function
+
+add skip modifier for keys to skip color?
+
+NUMBER_OF_LED_LIGHTS
 
 doing
-think about keycode parsing to allow usage of other keys
-tri layer keys
+make transpiler
+

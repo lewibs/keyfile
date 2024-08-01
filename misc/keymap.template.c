@@ -20,11 +20,10 @@ const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
 LEDMAP_INSERTION_POINT
 };
 
-// uint8_t layer_state_set_user(uint8_t state) {
-// TRILAYER_INSERTION_POINT
-//     //return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
-//   return state
-// }
+uint8_t layer_state_set_user(uint8_t state) {
+DUALKEY_INSERTION_POINT
+return state
+};
 
 /**
  * This sets the colors based on the active layer

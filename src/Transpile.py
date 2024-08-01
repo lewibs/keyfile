@@ -1,40 +1,142 @@
-from Parsers import Token
+from Parsers import Token, GlobalDefinitions
 from env import PATH
 import os
+from Parsers import SENTENCES
+
+class C_Segment:
+    def __init__(self, init):
+        self.code = init
+        self.lines = 0
+
+    def add_code(self, code, newline=True):
+        self.code += code
+        if newline:
+            self.lines += 1
+
+    def add_line(self, val):
+        self.add_code(f"\t{val};\n")
+
+    def __str__(self) -> str:
+        return self.code
+    
+class C_Enum(C_Segment):
+    def __init__(self, name, INIT=None):
+        super().__init__(f"enum {name} = " + "{\n")
+        if INIT:
+            self.add_code(f"\t{name}={INIT}")
+
+    def add_line(self, val):
+        self.add_code(f"\t{val},\n")
+
+    def close(self):
+        self.code = self.code[:-2]
+        self.add_code("\n};")
+
+
+class C_List(C_Segment):
+    def __init__(self, type, name):
+        code = f"const {type} PROGMEM {name}[]"
+        super().__init__(code)
+
+    def set_dims(self, rows, cols):
+        self.add_code(f"[{rows}][{cols}]" + " = {\n", newline=False)
+
+    def add_line(self, name, entries):
+        line = f"[{name}] = " + "{"
+
+        for entry in entries:
+            line += entry
+
+        if self.lines == 0:
+            self.add_code(line)
+        else:
+            self.add_code(",\n\t" + line)
+
+    def close(self):
+        self.add_code("\n};")
+
+class C_Func(C_Segment):
+    def __init__(self, type, name, inputs):
+        super().__init__(f"{type} {name}({" ".join(inputs)})" + "{\n")
+    def ret(self, ret):
+        self.add_code(f"\treturn {ret}")
+        self.add_code("\n};")
+
+class C_Head(C_Segment):
+    def __init__(self):
+        super().__init__("")
+
+    def add_line(self, val):
+        self.add_code(f"{val};\n")
+
+    def include(self, val):
+        self.add_code(f"#include {val}\n")
+
+RGB_MATRIX_FUNCTION = """
+bool rgb_matrix_indicators_user(void) {
+  int layer = biton32(layer_state);
+
+  for (int i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
+    HSV hsv = {
+      .h = pgm_read_byte(&ledmap[layer][i][0]),
+      .s = pgm_read_byte(&ledmap[layer][i][1]),
+      .v = pgm_read_byte(&ledmap[layer][i][2]),
+    };
+    if (!hsv.h && !hsv.s && !hsv.v) {
+        rgb_matrix_set_color( i, 0, 0, 0 );
+    } else {
+        RGB rgb = hsv_to_rgb( hsv );
+        float f = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
+        rgb_matrix_set_color( i, f * rgb.r, f * rgb.g, f * rgb.b );
+    }
+  }
+
+  return true;
+};
+"""
 
 def write_to_c(path:str, sentences)->None:
     # Read the template C file
     with open(os.path.join(PATH, "misc", 'keymap.template.c'), 'r') as file:
         c_code = file.read()
 
-    keycodes = "\tNO_CODE=SAFE_RANGE"
-    layout = ""
-    layers = ""
-    ledmap = ""
-    keymap_cols = ""
-    keymap_rows = ""
-    dual_keys = ""
+    headers = C_Head()
+    headers.include("QMK_KEYBOARD_H")
+    headers.include('"eeprom.h"')
+    headers.add_line("extern rgb_config_t rgb_matrix_config")
+    rgb_shaders = C_Segment(RGB_MATRIX_FUNCTION)
+
+    keycodes = C_Enum("keycodes", "SAFE_RANGE")
+    layers = C_Enum("layers")
+    keymap = C_List("uint16_t", "keymap")
+    ledmap = C_List("uint8_t", "ledmap")
+    dualkeys = C_Func("uint8_t", "layer_state_set_user", ["uint8_t", "state"])
 
     for sentence in sentences:
         if sentence.type == Token.LAYER:
-            layer, keys, colors = 1, 2, 3
-            layout += f"\t[{layer}] = {keys},\n"
-            ledmap += f"\t[{layer}] = {colors},\n"
-            layers += f"\t{layer},\n"
-        if sentence.type == Token.KEYBOARD:
-            keymap_cols = str(sentence.cols())
-            keymap_rows = str(sentence.rows())
-  
-    layout = layout[:-2]
-    ledmap = ledmap[:-2]
-    layers = layers[:-2]
+            name = sentence.words[1]
+            keys = sentence.words[2:]
 
-    c_code = c_code.replace('KEYCODES_INSERTION_POINT', keycodes)
-    c_code = c_code.replace('LAYER_INSERTION_POINT', layers)
-    c_code = c_code.replace('LAYOUT_INSERTION_POINT', layout)
-    c_code = c_code.replace('LEDMAP_INSERTION_POINT', ledmap)
-    c_code = c_code.replace("ROW_INSERTION_POINT", keymap_rows)
-    c_code = c_code.replace("COL_INSERTION_POINT", keymap_cols)
-    
+            keymap.add_line(name, keys)
+        
+            print(sentence.words)
+        if sentence.type == Token.KEYBOARD:
+            keymap.set_dims(sentence.words[2], sentence.words[3])
+            [layers.add_line(word) for word in sentence.words[4:]]
+            ledmap.set_dims("RGB_MATRIX_LED_COUNT", 3)
+        if sentence.type == Token.KEY and sentence.words[1].startswith(GlobalDefinitions.DUAL):
+            dualkeys.add_line(f"state = update_tri_layer_state(state, {sentence.words[2]}, {sentence.words[3]}, {sentence.words[4]})")
+
+    keycodes.close()
+    layers.close()
+    keymap.close()
+    ledmap.close()
+    dualkeys.ret("state")
+
+    c_code = ""
+
+    for seg in [headers, keycodes, layers, keymap, ledmap, dualkeys, rgb_shaders]:
+        c_code += "\n" + str(seg)
+
     with open(os.path.join(path, 'keymap.c'), 'w') as file:
         file.write(c_code)
