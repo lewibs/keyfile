@@ -32,7 +32,6 @@ class C_Enum(C_Segment):
         self.code = self.code[:-2]
         self.add_code("\n};")
 
-
 class C_List(C_Segment):
     def __init__(self, type, name):
         code = f"const {type} PROGMEM {name}[]"
@@ -41,16 +40,24 @@ class C_List(C_Segment):
     def set_dims(self, rows, cols):
         self.add_code(f"[{rows}][{cols}]" + " = {\n", newline=False)
 
-    def add_line(self, name, entries):
-        line = f"[{name}] = " + "{"
-
-        for entry in entries:
-            line += entry
+    def add_line(self, name):
+        line = f"\t[{name}] = " + "{"
 
         if self.lines == 0:
             self.add_code(line)
         else:
-            self.add_code(",\n\t" + line)
+            self.add_code(",\n" + line)
+
+    def add_row(self, items):
+        self.add_code("{")
+        for item in items:
+            self.add_code(str(item) + ",")
+        self.code = self.code[:-1]
+        self.add_code("},")
+
+    def close_line(self):
+        self.code = self.code[:-1]
+        self.add_code("}")
 
     def close(self):
         self.add_code("\n};")
@@ -111,19 +118,35 @@ def write_to_c(path:str, sentences)->None:
     keymap = C_List("uint16_t", "keymap")
     ledmap = C_List("uint8_t", "ledmap")
     dualkeys = C_Func("uint8_t", "layer_state_set_user", ["uint8_t", "state"])
+     
+    #TODO remove this
+    rows=0
+    cols=0
 
     for sentence in sentences:
         if sentence.type == Token.LAYER:
             name = sentence.words[1]
             keys = sentence.words[2:]
 
-            keymap.add_line(name, keys)
+            keymap.add_line(name)
+            #TODO make this ref the variable for items in the row
+            codes = [SENTENCES[key].translate_code() for key in keys]
+            for row in range(0, len(codes), cols):
+                keymap.add_row(codes[row:row+cols])
+            keymap.close_line()
+            
+            ledmap.add_line(name)
+            colors = [SENTENCES[key].translate_color() for key in keys]
+            for color in colors:
+                ledmap.add_row(color)
+            ledmap.close_line()
         
-            print(sentence.words)
         if sentence.type == Token.KEYBOARD:
+            rows = int(sentence.words[2])
+            cols = int(sentence.words[3])
             keymap.set_dims(sentence.words[2], sentence.words[3])
             [layers.add_line(word) for word in sentence.words[4:]]
-            ledmap.set_dims("RGB_MATRIX_LED_COUNT", 3)
+            ledmap.set_dims(str(rows*cols), 3)
         if sentence.type == Token.KEY and sentence.words[1].startswith(GlobalDefinitions.DUAL):
             dualkeys.add_line(f"state = update_tri_layer_state(state, {sentence.words[2]}, {sentence.words[3]}, {sentence.words[4]})")
 

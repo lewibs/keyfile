@@ -184,7 +184,6 @@ class BaseSentence():
         if not _is_key_modifier(word):
             if _is_keycode(word):
                 # Turns to nothing
-                self.consume(word)
                 return
             raise ParserException(f"Syntax Error: {word} is not a valid KEY_MODIFIER")
         
@@ -222,6 +221,24 @@ class KeySentence(BaseSentence):
             self.grammer += [Words.KEYCODE, Words.COLOR_REF]
 
         super().consume_initialize(word)
+
+    def translate_code(self):
+        mods = self.words[2:-1]
+        inner = mods[-1]
+        if inner in SENTENCES and SENTENCES[inner].type == Token.KEY:
+            inner = SENTENCES[inner].translate_code()
+
+        func = ""
+        close = ""
+        for mod in mods[:-1]:
+            func += mod + "("
+            close += ")"
+        func = func+inner+close        
+        return func
+    
+    def translate_color(self):
+        color = self.words[-1]
+        return SENTENCES[color].words[-3:]
 
 class LayerSentence(BaseSentence):
     def __init__(self, token):

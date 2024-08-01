@@ -33,6 +33,8 @@ add skip modifier for keys to skip color?
 
 NUMBER_OF_LED_LIGHTS
 
+add error checkign for C_code things where it looks at things like declared sicze and checks if that is correct 
+
 doing
 make transpiler
 
