@@ -1,40 +1,61 @@
 import argparse
 from argparse import Namespace
 from Parsers import parse_keyfile
+from Exceptions import ERROR_STACK, ParserException
+from Transpile import write_to_c
+import os
+from env import TEMPDIR
 
 def parse_args() -> Namespace:
-    # Create the argument parser
-    parser = argparse.ArgumentParser(description="TODO this is for -h")
+    parser = argparse.ArgumentParser(description="See documentation for more details: https://github.com/lewibs/keyfile")
     
-    # Add an argument for user input
-    parser.add_argument("-kf", type=str, help="target keyfile location")
-
-    parser.add_argument("-kf_resolved", type=str, help="target location for the dependency resolution info")
+    # Add arguments
+    parser.add_argument("-i", "--keyfile", type=str, required=True, help="Target input keyfile location")
+    parser.add_argument("-n", "--name", type=str, default="keyboard", help="Keyboard name")
+    parser.add_argument("-o", "--output", type=str, default=os.getcwd(), help="Target directory for output to be saved")
+    parser.add_argument("-l", "--linked", action="store_true", help="Saves the linked .kf")
+    parser.add_argument("-m", "--keymap", action="store_true", help="Saves the transpiled keymap files")
     
-    parser.add_argument("-km", type=str, help="target location for the keymap files that are created")
+    args = parser.parse_args()
+    args.output = os.path.join(args.output, args.name)
 
-    # Parse the arguments
-    return parser.parse_args()
+    return args
 
-# def write_resolved_tokens(to:str, tokens:List[BaseToken]):
-#     with open(to, 'w') as file:
-#         for token in tokens:
-#             file.write(f"{str(token)}\n")
+def get_sentences_from_keyfile(kf:str):
+    sentences = []
+    try:
+        sentences = parse_keyfile(kf)
+    except ParserException as e:
+        ERROR_STACK.insert(0, "Most recent call is lowest")
+        ERROR_STACK.insert(0, str(e)+"\n")
+
+        for string in reversed(ERROR_STACK):
+            print(string)
+    except Exception as e:
+        print("UNEXPECTED_ERROR: Ran into an unexpected issue. This is most likely not an issue with your code. This error occured while parsing the keyfile")
+
+    return sentences
+
+def write_sentences_to_linked_file(args, sentences):
+    try:
+        if args.linked:
+            with open(os.path.join(args.output,"linked.kf"), 'w') as file:
+                # Iterate over each sentence and write it to the file
+                for sentence in sentences:
+                    file.write(" ".join(sentence.words) + '\n')  # Ensure each sentence is on a new line
+    except Exception as e:
+        print("UNEXPECTED_ERROR: Ran into an unexpected issue. This is most likely not an issue with your code. This error occured while writing to the linked keyfile")
+
 
 def main() -> None:
     args = parse_args()
-    args.kf = "C:/Users/lewibs/github/keyfile/examples/lewibs.planck.ez.glow.kf"
+    args.keyfile = "C:/Users/lewibs/github/keyfile/examples/lewibs.planck.ez.glow.kf"
+    os.makedirs(args.output, exist_ok=True)
     # having to go through the code again and again causes xO(n) which could easily be improved.
     # however, the cleanness of this code will suffer and since it is unlikly that the .kfs will be that long, i think its safe to keep it slow
-    lines = parse_keyfile(args.kf)
-    # tokens = get_tokens_from_lines(lines, injected=False)
-
-    print(lines)
-
-    kb_name = args.kf.split("/")[-1][:-3] 
-
-    # if args.kf_resolved:
-    #     write_resolved_tokens(args.kf_resolved, tokens)
+    sentences = get_sentences_from_keyfile(args.keyfile)
+    write_sentences_to_linked_file(args, sentences)
+    write_to_c(args.output, sentences)
 
     # path = get_tmp_dir(kb_name)
 

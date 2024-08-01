@@ -4,24 +4,44 @@
 extern rgb_config_t rgb_matrix_config;
 
 enum keycodes {
-KEYCODES_INSERTION_POINT
+	NO_CODE=SAFE_RANGE
 };
 
 enum layers {
-LAYER_INSERTION_POINT
+	1,
+	1,
+	1,
+	1,
+	1,
+	1
 };
 
-const uint16_t PROGMEM keymaps[][ROW_INSERTION_POINT][COL_INSERTION_POINT] = {
-LAYOUT_INSERTION_POINT
+const uint16_t PROGMEM keymaps[][4][12] = {
+	[1] = 2,
+	[1] = 2,
+	[1] = 2,
+	[1] = 2,
+	[1] = 2,
+	[1] = 2
 };
 
 
 const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
-LEDMAP_INSERTION_POINT
+	[1] = 3,
+	[1] = 3,
+	[1] = 3,
+	[1] = 3,
+	[1] = 3,
+	[1] = 3
 };
 
 // uint8_t layer_state_set_user(uint8_t state) {
-// TRILAYER_INSERTION_POINT
+// TRI	1,
+	1,
+	1,
+	1,
+	1,
+	1
 //     //return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
 //   return state
 // }

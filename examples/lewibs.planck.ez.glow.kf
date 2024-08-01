@@ -3,7 +3,7 @@ COMMENT this is my (lewibs) keyboard layout that I like to use for programming i
 INJECT colors.kf
 INJECT keys.kf
 
-KEY d_line LCTL(LSFT(del)) c_none
+KEY d_line LCTL(LSFT(KC_DELETE)) c_none
 KEY d_word LCTL(KC_DELETE) c_none
 
 KEY b_word LCTL(KC_BSPC) c_none

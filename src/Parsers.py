@@ -1,4 +1,5 @@
 from env import PATH
+from Exceptions import ERROR_STACK, ParserException
 import os
 
 class Token:
@@ -25,49 +26,54 @@ class GlobalDefinitions:
     KEYBOARD="keyboard"
 
 SENTENCES = {}
+SENTENCES_ARR = []
 FILES = {}
 
 def parse_keyfile(path:str)->None:
     if path in FILES:
-        return
+        return []
 
     try:
         with open(path, "r") as file:
             FILES[path] = file
-            sentence = None
             
             for line_number, line in enumerate(file, start=1):
-                line = line.split()
-                for token_number, item in enumerate(line):
+                split_line = line.split()
+                for token_number, item in enumerate(split_line):
                     if token_number == 0 and item in Sentences:
                         #HANDLE new line starting
-                        sentence = Sentences[item](item)
+                        SENTENCES_ARR.append(Sentences[item](item))
                     else:
                         #CONTINUE old line consumption
-                        sentence.consume(item)
+                        SENTENCES_ARR[-1].consume(item)
+
+        return SENTENCES_ARR
     except FileNotFoundError as e:
         if PATH in path:
-            raise e
+            raise ParserException(f"File Not Found: {path}")
         else:
-            parse_keyfile(os.path.join(PATH, "misc", path))
+            return parse_keyfile(os.path.join(PATH, "misc", path))
+    except ParserException as e:
+        ERROR_STACK.append(f"{line_number} | {line}")
+        ERROR_STACK.append(f"{path}")
+        raise e
 
 
 def _declare(word:str, sentence_type):
     if word in SENTENCES:
-        raise Exception(f"ERROR: {word} already declared")
+        raise ParserException(f"Duplicate Declaration: '{word}' has already been declared")
 
     if not hasattr(Token, sentence_type):
-        print(sentence_type)
-        raise Exception(f"ERROR: {sentence_type} not a valid sentence")
+        raise ParserException(f"Bad Token: {sentence_type} not a valid token")
     
     SENTENCES[word] = sentence_type
     
 def _initialize(word:str, sentence):
     if word not in SENTENCES:
-        raise Exception(f"ERROR: {word} not yet declared")
+        raise ParserException(f"Not Defined: {word} is used before being declared")
 
     if SENTENCES[word] != sentence.type and SENTENCES[word].type != sentence.type:
-        raise Exception(f"ERROR: {sentence.type} is not {SENTENCES[word].type} for {word}")
+        raise ParserException(f"Invalid Type: {sentence.type} is not {SENTENCES[word].type} for {word}")
     
     SENTENCES[word] = sentence
 
@@ -83,16 +89,17 @@ class BaseSentence():
         else:
             return False
 
-    def consume(self, word:str)->None:
+    def consume(self, word:str):
         if self.is_complete():
-            raise Exception("ERROR: expected new token")
+            raise ParserException("Syntax Error: Expected new token")
         
-        getattr(self, f"consume_{self.grammer.pop(0)}")(word)
+        res = getattr(self, f"consume_{self.grammer.pop(0)}")(word)
         self.words.append(word)
+        return res
 
     def consume_token(self, word:str):
         if self.type != word:
-            raise Exception("ERROR: not a valid token")
+            raise ParserException("Syntax Error: Not a supported token")
 
     def consume_initialize(self, word:str):
         if word not in SENTENCES:
@@ -100,22 +107,23 @@ class BaseSentence():
         _initialize(word, self)
     
     def consume_path(self, word:str):
-        raise Exception("ERROR: path not supported for this sentence")
+        #This is an Exception because it will occur only when there is an issue with the parsing
+        raise Exception("Usage Error: Path is supported for this sentence")
     
     def consume_color(self, word:str):
         if not (0 <= int(word) <= 255):
-            raise Exception("ERROR: not a valid color")
+            raise ParserException("Value Error: Not a valid uint, must be between 0 to 255 (inclusive)")
         
     def consume_uint(self, word:str):
         if not (0 <= int(word)):
-            raise Exception("ERROR: not a valid uint")
+            raise ParserException("Value Error: Not a uint")
 
     def consume_ref(self, token_type:str, word:str):
         if word not in SENTENCES:
-            raise Exception(f"ERROR: {token_type} {word} not defined")
+            raise ParserException(f"Not Defined: {token_type} {word} is used before being declared")
         
         if word in SENTENCES and not isinstance(SENTENCES[word], Sentences[token_type]):
-            raise Exception(f'ERROR: {word} is not a {token_type}')
+            raise ParserException("Syntax Error: Not a supported token")
 
     def consume_color_ref(self, word:str):
         self.consume_ref(Token.COLOR, word)
@@ -130,7 +138,8 @@ class BaseSentence():
         self.consume_declare(Token.LAYER, word)
 
     def consume_keycode(self, word:str):
-        #TODO
+        #TODO make it so that no KC_ keycode is defined? or if it wants it can refer to keys that are local?
+        #TODO check that a layer swap would occur?
         pass
 
     def consume_comment(self, word:str):
@@ -151,7 +160,7 @@ class LayerSentence(BaseSentence):
         super().__init__(Token.LAYER, [Words.TOKEN, Words.INITIALIZE]) #...Words.KEY_REF
 
         if GlobalDefinitions.KEYBOARD not in SENTENCES:
-            raise Exception("ERROR: KEYBOARD must be defined before LAYERS")
+            raise ParserException("Syntax Error: KEYBOARD must be initialized before LAYERS")
 
         keyboard_token = SENTENCES[GlobalDefinitions.KEYBOARD]
 

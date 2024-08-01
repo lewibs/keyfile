@@ -1,3 +1,6 @@
+COMMENT this is my (lewibs) keyboard layout that I like to use for programming in C flavor languages
+INJECT colors.kf
+COMMENT a COLOR is defined as COLOR NAME:string R:int G:int B:int
 COLOR c_none 0 0 0
 COLOR c_red 255 0 0
 COLOR c_green 0 255 0
@@ -12,6 +15,8 @@ COLOR c_brown 165 42 42
 COLOR c_gray 128 128 128
 COLOR c_black 0 0 0
 COLOR c_white 255 255 255
+INJECT keys.kf
+INJECT colors.kf
 KEY no KC_NO c_none
 KEY a KC_A c_none
 KEY b KC_B c_none
@@ -123,19 +128,20 @@ KEY home KC_HOME c_none
 KEY end KC_END c_none
 KEY trans KC_TRANSPARENT c_none
 KEY calc KC_CALCULATOR c_none
-KEY d_line LCTL(LSFT(del)) c_none
+KEY d_line LCTL(LSFT(KC_DELETE)) c_none
 KEY d_word LCTL(KC_DELETE) c_none
 KEY b_word LCTL(KC_BSPC) c_none
 KEY b_line LCTL(LSFT(KC_BSPC)) c_none
 KEY w_left LCTL(KC_LEFT) c_none
 KEY w_right RCTL(KC_RIGHT) c_none
+KEYBOARD keyboard 4 12 _syms _nums _delete _mouse _fn _base
 KEY fn MO(_fn) c_none
 KEY syms MO(_syms) c_none
 KEY nums MO(_nums) c_none
 KEY mouse MO(_mouse) c_none
+LAYER _base q w e r t del bac y u i o p a s d f g ' enter h j k l ; z x c v b esc tab n m , . / ctl alt fn sft syms space no nums mouse no os alt
 LAYER _syms no no no no no trans trans no ! { } @ no no no no no ` trans no # ( ) $ no no no no no trans trans no | [ ] & trans trans trans trans trans trans trans trans trans trans trans trans
 LAYER _nums 0 1 2 3 no trans trans no % ~ \ no . 4 5 6 no ` trans no - + / * = 7 8 9 no calc trans no no < > ^ trans trans trans trans trans trans trans trans trans trans trans trans
 LAYER _delete no no no no no trans trans no no no no no d_line tab d_word del no no trans no bac b_word enter b_line no no no no no trans trans no no no no no trans trans trans trans trans trans trans trans trans trans trans trans
 LAYER _mouse no r_clk m_up l_clk no trans trans no enter up no no no m_left m_down m_right no no trans w_left left down right w_right p_left p_up no p_down p_right trans trans no home no end no trans trans trans trans trans trans trans trans trans trans trans trans
 LAYER _fn f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 no no no no no no brt- brt+ vol- vol+ no vol_m no no no no no no no no no no no pause trans trans trans trans trans trans no trans trans trans trans trans
-LAYER _base q w e r t del bac y u i o p a s d f g ' enter h j k l ; z x c v b esc tab n m , . / ctl alt fn sft syms space no nums mouse no os alt
