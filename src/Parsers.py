@@ -1,125 +1,204 @@
-from typing import Dict, List, Callable
-from Tokens import Token, BaseToken, ColorToken, KeyToken, LayerToken
 from env import PATH
+import os
 
-TOKENS = {}
+class Token:
+    COMMENT="COMMENT"
+    INJECT="INJECT"
+    COLOR="COLOR"
+    KEY="KEY"
+    LAYER="LAYER"
+    KEYBOARD="KEYBOARD"
+
+class Words:
+    TOKEN="token"
+    COMMENT="comment"
+    INITIALIZE="initialize"
+    PATH="path"
+    COLOR="color"
+    UINT="uint"
+    KEYCODE="keycode"
+    COLOR_REF="color_ref"
+    KEY_REF="key_ref"
+    DECLARE_LAYER="declare_layer"
+
+class GlobalDefinitions:
+    KEYBOARD="keyboard"
+
+SENTENCES = {}
 FILES = {}
 
-# Define the type for functions in TOKEN_PARSERS
-ParserFunction = Callable[[List[str]], List[BaseToken]]
-
-def get_tokens_from_lines(lines:List[str], injected=True)->List[BaseToken]:
-    tokens = []
-
-    for line in lines:
-        res = Token_Parsers.get(line[0])(line)
-        for token in res:
-            if token.name in TOKENS:
-                raise Exception(f"{token.name} already defined")
-            
-            if injected == False:
-                TOKENS[token.name] = token
-            
-            tokens.append(token)
-
-    return tokens
-
-def make_line_consumer()->Callable[[str],str|None]:
-    FLUSH = "FLUSH"
-    args = None
-
-    def consume_line(line:str) -> List[str]|None:
-        nonlocal args
-
-        if line == FLUSH:
-            return args
-        
-        ret = None
-        line = line.split()
-        
-        if len(line) == 0:
-            return ret
-
-        if line[0] in Token.__members__:
-            ret = args
-            args = line
-        else:
-            ret = None
-            args += line 
-
-        return ret
-    
-    return consume_line, FLUSH
-
-def get_lines_from_keyfile(path:str)->List[str]:
-    consume_line, FLUSH = make_line_consumer()
-
-    with open(path, "r") as file:
-        lines = []
-        for line in file:
-            line = consume_line(line)
-            if line:
-                lines.append(line)
-        
-        #We have hit the end of the file but there is a line that needs to be flushed from consume line
-        line = consume_line(FLUSH)
-        if line:
-            lines.append(line)
-
-    return lines
-
-def parse_INJECT(items:List[str])->List[BaseToken]:
-    path = f"{PATH}/misc/{items[1]}"
+def parse_keyfile(path:str)->None:
     if path in FILES:
-        return []
-    else:
-        FILES[path] = True
-        lines = get_lines_from_keyfile(path)
-        tokens = get_tokens_from_lines(lines)
-        return tokens
+        return
 
-def parse_COLOR(items:List[str])->List[ColorToken]:
-    tokens = [ColorToken(
-        name=items[1],
-        r=items[2],
-        g=items[3],
-        b=items[4],
-    )]
-    return tokens
+    try:
+        with open(path, "r") as file:
+            FILES[path] = file
+            sentence = None
+            
+            for line_number, line in enumerate(file, start=1):
+                line = line.split()
+                for token_number, item in enumerate(line):
+                    if token_number == 0 and item in Sentences:
+                        #HANDLE new line starting
+                        sentence = Sentences[item](item)
+                    else:
+                        #CONTINUE old line consumption
+                        sentence.consume(item)
+    except FileNotFoundError as e:
+        if PATH in path:
+            raise e
+        else:
+            parse_keyfile(os.path.join(PATH, "misc", path))
 
-def parse_KEY(items:List[str])->List[BaseToken]:
-    if items[3] not in TOKENS:
-        raise Exception(f"COLOR {items[3]} not defined for KEY {items[1]}")
 
-    tokens = [KeyToken(
-        name=items[1],
-        keycode=items[2],
-        color=items[3],
-    )]
-    return tokens
+def _declare(word:str, sentence_type):
+    if word in SENTENCES:
+        raise Exception(f"ERROR: {word} already declared")
 
-def parse_LAYER(items:List[str])->List[BaseToken]:
-    for key in items[3:]:
-        if key not in TOKENS:
-            raise Exception(f"KEY {key} not defined for LAYER {items[1]}")
+    if not hasattr(Token, sentence_type):
+        print(sentence_type)
+        raise Exception(f"ERROR: {sentence_type} not a valid sentence")
+    
+    SENTENCES[word] = sentence_type
+    
+def _initialize(word:str, sentence):
+    if word not in SENTENCES:
+        raise Exception(f"ERROR: {word} not yet declared")
 
-    tokens = [
-        LayerToken(
-            name=items[1],
-            layout=items[2],
-            keys=items[3:]
-        )
-    ]
-    return tokens
+    if SENTENCES[word] != sentence.type and SENTENCES[word].type != sentence.type:
+        raise Exception(f"ERROR: {sentence.type} is not {SENTENCES[word].type} for {word}")
+    
+    SENTENCES[word] = sentence
 
-def parse_COMMENT(items:List[str])->List[BaseToken]:
-    return []
+class BaseSentence():
+    def __init__(self, sentence_type, grammer):
+        self.type = sentence_type
+        self.grammer = grammer
+        self.words = []
 
-# Create a dictionary mapping tokens to parsing functions
-Token_Parsers: Dict[Token, ParserFunction] = {
-    Token.INJECT.name: parse_INJECT,
-    Token.COLOR.name: parse_COLOR,
-    Token.KEY.name: parse_KEY,
-    Token.LAYER.name: parse_LAYER,
-    Token.COMMENT.name: parse_COMMENT,
+    def is_complete(self):
+        if len(self.grammer) == 0:
+            return True
+        else:
+            return False
+
+    def consume(self, word:str)->None:
+        if self.is_complete():
+            raise Exception("ERROR: expected new token")
+        
+        getattr(self, f"consume_{self.grammer.pop(0)}")(word)
+        self.words.append(word)
+
+    def consume_token(self, word:str):
+        if self.type != word:
+            raise Exception("ERROR: not a valid token")
+
+    def consume_initialize(self, word:str):
+        if word not in SENTENCES:
+            _declare(word, self.type)
+        _initialize(word, self)
+    
+    def consume_path(self, word:str):
+        raise Exception("ERROR: path not supported for this sentence")
+    
+    def consume_color(self, word:str):
+        if not (0 <= int(word) <= 255):
+            raise Exception("ERROR: not a valid color")
+        
+    def consume_uint(self, word:str):
+        if not (0 <= int(word)):
+            raise Exception("ERROR: not a valid uint")
+
+    def consume_ref(self, token_type:str, word:str):
+        if word not in SENTENCES:
+            raise Exception(f"ERROR: {token_type} {word} not defined")
+        
+        if word in SENTENCES and not isinstance(SENTENCES[word], Sentences[token_type]):
+            raise Exception(f'ERROR: {word} is not a {token_type}')
+
+    def consume_color_ref(self, word:str):
+        self.consume_ref(Token.COLOR, word)
+
+    def consume_key_ref(self, word:str):
+        self.consume_ref(Token.KEY, word)
+
+    def consume_declare(self, sentence_type, word):
+        _declare(word, sentence_type)
+
+    def consume_declare_layer(self, word:str):
+        self.consume_declare(Token.LAYER, word)
+
+    def consume_keycode(self, word:str):
+        #TODO
+        pass
+
+    def consume_comment(self, word:str):
+        self.grammer.append(Words.COMMENT)
+
+class ColorSentence(BaseSentence):
+    def __init__(self, token):
+        super().__init__(Token.COLOR, [Words.TOKEN, Words.INITIALIZE, Words.COLOR, Words.COLOR, Words.COLOR])
+        self.consume(token)
+
+class KeySentence(BaseSentence):
+    def __init__(self, token):
+        super().__init__(Token.KEY, [Words.TOKEN, Words.INITIALIZE, Words.KEYCODE, Words.COLOR_REF])
+        self.consume(token)
+
+class LayerSentence(BaseSentence):
+    def __init__(self, token):
+        super().__init__(Token.LAYER, [Words.TOKEN, Words.INITIALIZE]) #...Words.KEY_REF
+
+        if GlobalDefinitions.KEYBOARD not in SENTENCES:
+            raise Exception("ERROR: KEYBOARD must be defined before LAYERS")
+
+        keyboard_token = SENTENCES[GlobalDefinitions.KEYBOARD]
+
+        for i in range(keyboard_token.rows() * keyboard_token.cols()):
+            self.grammer.append(Words.KEY_REF)
+
+        self.consume(token)
+
+class InjectSentence(BaseSentence):
+    def __init__(self, token):
+        super().__init__(Token.INJECT, [Words.TOKEN, Words.PATH])
+        self.consume(token)
+    
+    def consume_path(self, word:str):
+        parse_keyfile(word)
+
+class CommentSentence(BaseSentence):
+    def __init__(self, token):
+        super().__init__(Token.COMMENT, [Words.TOKEN, Words.COMMENT])
+        self.consume(token)
+
+    def is_complete(self):
+        return False
+
+class KeyboardSentence(BaseSentence):
+    def __init__(self, token):
+        super().__init__(Token.KEYBOARD, [Words.TOKEN, Words.INITIALIZE, Words.UINT, Words.UINT, Words.DECLARE_LAYER]) #...Words.DECLARE_LAYER
+        self.consume(token)
+        self.consume(GlobalDefinitions.KEYBOARD)
+
+    def rows(self):
+        return int(self.words[2])
+
+    def cols(self):
+        return int(self.words[3])
+
+    def consume(self, word: str):
+        res = super().consume(word)
+        if self.is_complete():
+            self.grammer.append(Words.DECLARE_LAYER)
+        return res
+
+Sentences={
+    Token.COMMENT:CommentSentence,
+    Token.INJECT:InjectSentence,
+    Token.COLOR:ColorSentence,
+    Token.KEY:KeySentence,
+    Token.LAYER:LayerSentence,
+    Token.KEYBOARD:KeyboardSentence
 }

@@ -4,7 +4,7 @@ Keyfile is a method for defining a keyboard and how it will opperate.
 There are three goals targeted in the creation of this format.
 1. It must be clear to understand.
 2. It must be easy to modify.
-3. It must be as verbose as pure C.
+3. It must be as verbose as pure C and as easy to use as a GUI.
 
 ## Tokens
 All instructions will start with a token. The parser will read the lines in as though they belong to the last used token, until a line starts with a new token. This means, that a command can extend upon many lines, so long as the lines do not start with a token.

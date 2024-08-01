@@ -8,23 +8,31 @@
 extern rgb_config_t rgb_matrix_config;
 
 enum keycodes {
-//KEYCODES_INSERTION_POINT
+KEYCODES_INSERTION_POINT
 };
 
 enum layers {
-//LAYER_INSERTION_POINT
+LAYER_INSERTION_POINT
 };
 
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-//LAYOUT_INSERTION_POINT
+const uint16_t PROGMEM keymaps[][ROW_INSERTION_POINT][COL_INSERTION_POINT] = {
+LAYOUT_INSERTION_POINT
 };
 
 
-const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT+1][3] = {
-//LEDMAP_INSERTION_POINT
+const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
+LEDMAP_INSERTION_POINT
 };
 
-//THIS IS NEEDED FOR SETTING THE COLOR BASED ON THE LAYER
+uint8_t layer_state_set_user(uint8_t state) {
+TRILAYER_INSERTION_POINT
+    //return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+  return state
+}
+
+/**
+ * This sets the colors based on the active layer
+ */
 bool rgb_matrix_indicators_user(void) {
   int layer = biton32(layer_state);
 
@@ -44,11 +52,4 @@ bool rgb_matrix_indicators_user(void) {
   }
 
   return true;
-}
-
-//THIS IS NEEDED for double layers
-uint8_t layer_state_set_user(uint8_t state) {
-  //TODO figure out how to insert here
-  //return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
-  return 0
 }
