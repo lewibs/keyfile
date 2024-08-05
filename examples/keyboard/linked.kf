@@ -129,7 +129,7 @@ KEY home KC_HOME c_pink
 KEY end KC_END c_pink
 COMMENT KEY trans KC_TRANSPARENT c_none
 KEY calc KC_CALCULATOR c_blue
-KEYBOARD keyboard LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _syms _nums _delete _mouse _fn _base
+KEYBOARD keyboard LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _base _syms _nums _delete _mouse _fn
 COLOR c_none 0 0 0
 KEY d_line LCTL LSFT del c_red
 KEY d_word LCTL del c_red

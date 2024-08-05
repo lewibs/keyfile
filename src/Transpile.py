@@ -84,6 +84,10 @@ return state;
         return f"state = update_tri_layer_state(state, {layerA}, {layerB}, {target_layer});"
 
     RGB_MATRIX_FUNCTION = """
+void keyboard_post_init_user(void) {
+  rgb_matrix_enable();
+}
+
 bool rgb_matrix_indicators_user(void) {
   int layer = biton32(layer_state);
 
