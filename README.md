@@ -21,6 +21,7 @@ All instructions will start with a token. The parser will read the lines in as t
 
 ## TODO
 * add formal definitions for grammer to the readme
+* make KEY MACRO
 * set it up to run with QMK so it can make the .bin right away and delete the keymap files
 * add skip modifier for keys to skip color?
 * need to make config.h generate
