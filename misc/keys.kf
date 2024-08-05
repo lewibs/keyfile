@@ -1,7 +1,9 @@
 INJECT colors.kf
 
+KEY SKIP
+KEY TRANS
+
 KEY no KC_NO c_none
-KEY SKIP KC_NO c_none
 
 KEY a KC_A c_white
 KEY b KC_B c_white
@@ -119,5 +121,4 @@ KEY p_down KC_MS_WH_DOWN c_pink
 KEY home KC_HOME c_pink
 KEY end KC_END c_pink
 
-COMMENT KEY trans KC_TRANSPARENT c_none
 KEY calc KC_CALCULATOR c_blue

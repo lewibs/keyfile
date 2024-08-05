@@ -30,6 +30,7 @@ class GlobalDefinitions:
     KEYBOARD="keyboard"
     DUAL="DUAL"
     SKIP="SKIP"
+    TRANS="TRANS"
 
 SENTENCES = {}
 SENTENCES_ARR = []
@@ -124,8 +125,8 @@ class BaseSentence():
         if self.is_complete():
             raise ParserException("Syntax Error: Expected new token")
         
-        res = getattr(self, f"consume_{self.grammer.pop(0)}")(word)
         self.words.append(word)
+        res = getattr(self, f"consume_{self.grammer.pop(0)}")(word)
 
         return res
 
@@ -225,6 +226,10 @@ class KeySentence(BaseSentence):
             KeySentence._dual_keys += 1
             word = f"{GlobalDefinitions.DUAL}_{KeySentence._dual_keys}"
             self.grammer += [Words.LAYER_REF, Words.LAYER_REF, Words.LAYER_REF]
+        elif word == GlobalDefinitions.TRANS:
+            self.words.append("KC_TRANSPARENT")
+        elif word == GlobalDefinitions.SKIP:
+            self.words.append("KC_NO")
         else:
             self.grammer += [Words.KEYCODE, Words.COLOR_REF]
 
@@ -243,34 +248,36 @@ class KeySentence(BaseSentence):
         if self.name().startswith(GlobalDefinitions.DUAL):
             raise ParserException("Usage error: trying to get keycode on a dual key")
         
+        if self.name().startswith(GlobalDefinitions.TRANS):
+            return "KC_TRANSPARENT"
+
+        if self.name().startswith(GlobalDefinitions.SKIP):
+            return "KC_NO"
+
         code = self.words[-2]
         modifiers = self.words[2:-2]
-        keycode = ""
+        key_code = ""
 
         for modifier in modifiers:
-            keycode+=f"{modifier}("
+            key_code+=f"{modifier}("
         
         #TODO
         if code in SENTENCES and SENTENCES[code].type == Token.KEY:
-            keycode += SENTENCES[code].keycode()
+            key_code += SENTENCES[code].keycode()
         else:
-            keycode += code
+            key_code += code
 
         for i in range(len(modifiers)):
-            keycode+=")"
+            key_code+=")"
 
-        return keycode
+        return key_code
 
 
     def color(self):
-        if self.name().startswith(GlobalDefinitions.DUAL):
+        if self.name().startswith(GlobalDefinitions.DUAL) or self.name().startswith(GlobalDefinitions.TRANS) or self.name().startswith(GlobalDefinitions.SKIP):
             raise ParserException("Usage error: trying to get color on a dual key")
         
         return SENTENCES[self.words[-1]].color()
-
-    # def translate_color(self):
-    #     color = self.words[-1]
-    #     return SENTENCES[color].words[-3:]
 
 class LayerSentence(BaseSentence):
     def __init__(self, token):
@@ -288,15 +295,28 @@ class LayerSentence(BaseSentence):
     def name(self):
         return self.words[1]
 
+    def key_refs(self):
+        return self.words[2:]
+
     def keys(self):
-        return [SENTENCES[key_ref].keycode() for key_ref in self.words[2:]]
+        keys = []
+
+        for key_ref in self.key_refs():
+            keys.append(SENTENCES[key_ref].keycode())
+
+        return keys
 
     def leds(self):
         leds = []
-        for key_ref in self.words[2:]:
+        for i, key_ref in enumerate(self.key_refs()):
             if SENTENCES[key_ref].name() == GlobalDefinitions.SKIP:
                 continue
-            leds.append(SENTENCES[key_ref].color()) 
+            elif SENTENCES[key_ref].name() == GlobalDefinitions.TRANS:
+                _base = SENTENCES[GlobalDefinitions.KEYBOARD].layers()[0]
+                color = SENTENCES[SENTENCES[_base].key_refs()[i]].color()
+                leds.append(color)
+            else:
+                leds.append(SENTENCES[key_ref].color()) 
         return leds
 
 

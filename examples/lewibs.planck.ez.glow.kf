@@ -5,8 +5,6 @@ INJECT keys.kf
 
 KEYBOARD LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _base _syms _nums _delete _mouse _fn
 
-COLOR c_none 0 0 0
-
 KEY d_line LCTL LSFT del c_red
 KEY d_word LCTL del c_red
 KEY b_word LCTL bac c_red
@@ -28,31 +26,31 @@ z       x       c       v       b       esc     tab      n       m       ,      
 ctl     alt     fn      sft     syms    space   SKIP     nums    mouse   no      os      alt
 
 LAYER _syms
-no      no      no      no      no      del     bac      no      !       {       }        @            
-no      no      no      no      no      '       enter    no      #       (       )        $           
-no      no      no      no      no      esc     tab      no      |       [       ]        &          
-ctl     alt     fn      sft     syms    space   SKIP     nums    mouse   no      os      alt
+no      no      no      no      no      TRANS   TRANS    no      !       {       }        @            
+no      no      no      no      no      TRANS   TRANS    no      #       (       )        $           
+no      no      no      no      no      TRANS   TRANS    no      |       [       ]        &          
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
 LAYER _nums
-0       1       2       3       no      del     bac      no      %       ~       \        no
-.       4       5       6       no      '       enter    no      -       +       /        *         
-=       7       8       9       no      calc    tab      no      no      <       >        ^         
-ctl     alt     fn      sft     syms    space   SKIP     nums    mouse   no      os      alt
+0       1       2       3       no      TRANS   TRANS    no      %       ~       \        no
+.       4       5       6       no      TRANS   TRANS    no      -       +       /        *         
+=       7       8       9       no      calc    TRANS    no      no      <       >        ^         
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
 LAYER _delete
-no      no      no      no      no      del     bac      no      no      no      no       no
-d_line  tab     d_word  del     no      no      enter    no      bac     b_word  enter    b_line
-no      no      no      no      no      esc     tab      no      no      no      no       no
-ctl     alt     fn      sft     syms    space   SKIP     nums    mouse   no      os      alt
+no      no      no      no      no      TRANS   TRANS    no      no      no      no       no
+d_line  tab     d_word  del     no      no      TRANS    no      bac     b_word  enter    b_line
+no      no      no      no      no      TRANS   TRANS    no      no      no      no       no
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
 LAYER _mouse
-no     r_clk    m_up    l_clk   no      del     bac      no      enter   up      no       no
-no     m_left   m_down  m_right no      no      enter    w_left  left    down    right    w_right
-p_left p_up     no      p_down  p_right esc     tab      no      home    no      end      no
-ctl     alt     fn      sft     syms    space   SKIP     nums    mouse   no      os      alt
+no     r_clk    m_up    l_clk   no      TRANS   TRANS    no      enter   up      no       no
+no     m_left   m_down  m_right no      no      TRANS    w_left  left    down    right    w_right
+p_left p_up     no      p_down  p_right TRANS   TRANS    no      home    no      end      no
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
 LAYER _fn
 f1      f2      f3      f4      f5      f6      f7       f8      f9      f10      f11     f12
 no      no      no      no      no      no      brt-     brt+    vol-    vol+     no      vol_m
 no      no      no      no      no      no      no       no      no      no       no      pause 
-ctl     alt     fn      sft     syms    space   SKIP     nums    mouse   no       os      alt
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS

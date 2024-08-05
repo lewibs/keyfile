@@ -1,6 +1,8 @@
 # Keyfile Documentation
 Keyfile is a DSL for defining a keyboard and how it will opperate.
 
+This could directly compile to binary, however, that is more complicated then I want to deal with so it goes to C and then you can utilize QMK to compile it to binary.
+
 There are three goals targeted in the creation of this format.
 1. It must be clear to understand.
 2. It must be easy to modify.
@@ -15,12 +17,13 @@ All instructions will start with a token. The parser will read the lines in as t
 | COLOR    | Define a color with the name and HSV values (0-255)   | `COLOR NAME H S V`                               |
 | KEY      | Define a key with its name, key code, and color       | `KEY NAME ...MODIFYER KEY_CODE COLOR`            |
 | KEY DUAL | Define a dual key action using the layer names        | `KEY DUAL LAYER_REF LAYER_REF LAYER_REF`         |
+| KEY SKIP | This is used to skip this key when it does not exist  | SKIP is reserved and should not be initialized   |
+| KEY TRANS| This is used to define a transparednt layer           | TRANS is reserved and should not be initialized  |
 | COMMENT  | Add comments to your code                             | `COMMENT ANYTHING`                               |
 | LAYER    | Define a layer with its name, layout macros, and keys | `LAYER NAME ...KEY`                              |
 | KEYBOARD | Defines the keyboard that will be created             | `KEYBOARD MACRO ROWS COLS LEDS ...LAYER`         |
 
 ## TODO
-* add transparent key (this is hard cause or RGB)
 * add formal definitions for grammer to the readme
 * make KEY MACRO
 * set it up to run with QMK so it can make the .bin right away and delete the keymap files
