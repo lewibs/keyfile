@@ -20,6 +20,7 @@ All instructions will start with a token. The parser will read the lines in as t
 | KEYBOARD | Defines the keyboard that will be created             | `KEYBOARD MACRO ROWS COLS LEDS ...LAYER`         |
 
 ## TODO
+* add transparent key (this is hard cause or RGB)
 * add formal definitions for grammer to the readme
 * make KEY MACRO
 * set it up to run with QMK so it can make the .bin right away and delete the keymap files
