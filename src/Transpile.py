@@ -113,7 +113,7 @@ bool rgb_matrix_indicators_user(void) {
     LED_INJECTABLE = ""
     KEY_INJECTABLE = ""
     DUAL_INJECTABLE = ""
-    KEY_CODE_INJECTABLE = "NO_KEY = SAFE_RANGE,\n"
+    KEY_CODE_INJECTABLE = "RGB_SLD = SAFE_RANGE,\n"
     MACRO = ""
 
     for sentence in sentences:

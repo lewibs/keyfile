@@ -1,20 +1,20 @@
 COMMENT this is my (lewibs) keyboard layout that I like to use for programming in C flavor languages
 INJECT colors.kf
-COMMENT a COLOR is defined as COLOR NAME:string R:int G:int B:int
+COMMENT a COLOR is defined as COLOR NAME:string H:int S:int V:int
 COLOR c_none 0 0 0
-COLOR c_red 255 0 0
-COLOR c_green 0 255 0
-COLOR c_blue 0 0 255
-COLOR c_orange 255 165 0
-COLOR c_yellow 255 255 0
-COLOR c_purple 128 0 128
-COLOR c_cyan 0 255 255
-COLOR c_magenta 255 0 255
-COLOR c_pink 255 192 203
-COLOR c_brown 165 42 42
-COLOR c_gray 128 128 128
+COLOR c_red 0 255 255
+COLOR c_green 85 255 255
+COLOR c_blue 170 255 255
+COLOR c_orange 21 255 255
+COLOR c_yellow 43 255 255
+COLOR c_purple 180 255 255
+COLOR c_cyan 127 255 255
+COLOR c_magenta 200 255 255
+COLOR c_pink 210 255 255
+COLOR c_brown 10 255 165
+COLOR c_gray 0 0 128
 COLOR c_black 0 0 0
-COLOR c_white 255 255 255
+COLOR c_white 0 0 255
 INJECT keys.kf
 INJECT colors.kf
 KEY no KC_NO c_none

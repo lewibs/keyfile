@@ -12,7 +12,7 @@ All instructions will start with a token. The parser will read the lines in as t
 | Token    | Description                                           | Syntax                                           |
 |----------|-------------------------------------------------------|--------------------------------------------------|
 | INJECT   | Include external files or paths                       | `INJECT FILE`                                    |
-| COLOR    | Define a color with the name and RGB values (0-255)   | `COLOR NAME R G B`                               |
+| COLOR    | Define a color with the name and HSV values (0-255)   | `COLOR NAME H S V`                               |
 | KEY      | Define a key with its name, key code, and color       | `KEY NAME ...MODIFYER KEY_CODE COLOR`            |
 | KEY DUAL | Define a dual key action using the layer names        | `KEY DUAL LAYER_REF LAYER_REF LAYER_REF`         |
 | COMMENT  | Add comments to your code                             | `COMMENT ANYTHING`                               |
