@@ -25,34 +25,34 @@ LAYER _base
 q       w       e       r       t       del     bac      y       u       i       o       p
 a       s       d       f       g       '       enter    h       j       k       l       ;
 z       x       c       v       b       esc     tab      n       m       ,       .       /
-ctl     alt     fn      sft     syms    space   no       nums    mouse   no      os      alt
+ctl     alt     fn      sft     syms    space   SKIP     nums    mouse   no      os      alt
 
 LAYER _syms
 no      no      no      no      no      trans   trans    no      !       {       }        @            
 no      no      no      no      no      `       trans    no      #       (       )        $           
 no      no      no      no      no      trans   trans    no      |       [       ]        &          
-trans   trans   trans   trans   trans   trans   trans    trans   trans   trans   trans    trans
+trans   trans   trans   trans   trans   trans   SKIP     trans   trans   trans   trans    trans
 
 LAYER _nums
 0       1       2       3       no      trans   trans    no      %       ~       \        no
 .       4       5       6       no      `       trans    no      -       +       /        *         
 =       7       8       9       no      calc    trans    no      no      <       >        ^         
-trans   trans   trans   trans   trans   trans   trans    trans   trans   trans   trans    trans
+trans   trans   trans   trans   trans   trans   SKIP     trans   trans   trans   trans    trans
 
 LAYER _delete
 no      no      no      no      no      trans   trans    no      no      no      no       no
 d_line  tab     d_word  del     no      no      trans    no      bac     b_word  enter    b_line
 no      no      no      no      no      trans   trans    no      no      no      no       no
-trans   trans   trans   trans   trans   trans   trans    trans   trans   trans   trans    trans
+trans   trans   trans   trans   trans   trans   SKIP     trans   trans   trans   trans    trans
 
 LAYER _mouse
 no     r_clk    m_up    l_clk   no      trans   trans    no      enter   up      no       no
 no     m_left   m_down  m_right no      no      trans    w_left  left    down    right    w_right
 p_left p_up     no      p_down  p_right trans   trans    no      home    no      end      no
-trans   trans   trans   trans   trans   trans   trans    trans   trans   trans   trans    trans
+trans   trans   trans   trans   trans   trans   SKIP     trans   trans   trans   trans    trans
 
 LAYER _fn
 f1      f2      f3      f4      f5      f6      f7       f8      f9      f10      f11     f12
 no      no      no      no      no      no      brt-     brt+    vol-    vol+     no      vol_m
 no      no      no      no      no      no      no       no      no      no       no      pause 
-trans   trans   trans   trans   trans   trans   no       trans   trans   trans   trans    trans
+trans   trans   trans   trans   trans   trans   SKIP     trans   trans   trans   trans    trans

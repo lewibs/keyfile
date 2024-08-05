@@ -2,6 +2,39 @@
 from Parsers import Token, GlobalDefinitions	
 import os
 
+
+CONFIG = """
+#pragma once
+
+#ifdef AUDIO_ENABLE
+#define STARTUP_SONG SONG(PLANCK_SOUND)
+#endif
+
+#define MIDI_BASIC
+
+#define ENCODER_RESOLUTION 4
+
+/*
+  Set any config.h overrides for your specific keymap here.
+  See config.h options at https://docs.qmk.fm/#/config_options?id=the-configh-file
+*/
+
+#define ORYX_CONFIGURATOR
+#undef DEBOUNCE
+#define DEBOUNCE 10
+
+#define USB_SUSPEND_WAKEUP_DELAY 0
+#undef MOUSEKEY_TIME_TO_MAX
+#define MOUSEKEY_TIME_TO_MAX 22
+
+#define FIRMWARE_VERSION u8"rlj79/RLPW6"
+#define RAW_USAGE_PAGE 0xFF60
+#define RAW_USAGE_ID 0x61
+#define LAYER_STATE_8BIT
+
+#define RGB_MATRIX_STARTUP_SPD 60
+"""
+
 def write_to_c(path:str, sentences) -> None:
     HEADER = """
 #include QMK_KEYBOARD_H
@@ -11,13 +44,13 @@ extern rgb_config_t rgb_matrix_config;
 """
 
     KEY_CODES = """
-const enum keycodes {
+enum keycodes {
 INSERT_KEY_CODES
 };
 """
 
     LAYER_NAMES = """
-const enum layers {
+enum layers {
 INSERT_LAYER_NAMES
 };
 """
@@ -43,7 +76,7 @@ INSERT_LED_LAYER
     DUAL_LAYERS = """
 uint8_t layer_state_set_user(uint8_t state) {
 INSERT_DUAL_LAYER
-return state
+return state;
 }
 """
 
@@ -76,7 +109,7 @@ bool rgb_matrix_indicators_user(void) {
     LED_INJECTABLE = ""
     KEY_INJECTABLE = ""
     DUAL_INJECTABLE = ""
-    KEY_CODE_INJECTABLE = "NO_KEY = SAFE_RANGE,"
+    KEY_CODE_INJECTABLE = "NO_KEY = SAFE_RANGE,\n"
     MACRO = ""
 
     for sentence in sentences:
@@ -115,3 +148,6 @@ bool rgb_matrix_indicators_user(void) {
 
     with open(os.path.join(path, 'keymap.c'), 'w') as file:
         file.write(c_code)
+
+    with open(os.path.join(path, 'config.h'), 'w') as file:
+        file.write(CONFIG)

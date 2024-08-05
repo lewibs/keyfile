@@ -29,6 +29,7 @@ class Words:
 class GlobalDefinitions:
     KEYBOARD="keyboard"
     DUAL="DUAL"
+    SKIP="SKIP"
 
 SENTENCES = {}
 SENTENCES_ARR = []
@@ -291,7 +292,12 @@ class LayerSentence(BaseSentence):
         return [SENTENCES[key_ref].keycode() for key_ref in self.words[2:]]
 
     def leds(self):
-        return [SENTENCES[key_ref].color() for key_ref in self.words[2:]]
+        leds = []
+        for key_ref in self.words[2:]:
+            if SENTENCES[key_ref].name() == GlobalDefinitions.SKIP:
+                continue
+            leds.append(SENTENCES[key_ref].color()) 
+        return leds
 
 
 class InjectSentence(BaseSentence):

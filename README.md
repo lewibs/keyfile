@@ -14,29 +14,13 @@ All instructions will start with a token. The parser will read the lines in as t
 | INJECT   | Include external files or paths                       | `INJECT FILE`                                    |
 | COLOR    | Define a color with the name and RGB values (0-255)   | `COLOR NAME R G B`                               |
 | KEY      | Define a key with its name, key code, and color       | `KEY NAME ...MODIFYER KEY_CODE COLOR`            |
+| KEY DUAL | Define a dual key action using the layer names        | `KEY DUAL LAYER_REF LAYER_REF LAYER_REF`         |
 | COMMENT  | Add comments to your code                             | `COMMENT ANYTHING`                               |
 | LAYER    | Define a layer with its name, layout macros, and keys | `LAYER NAME ...KEY`                              |
-| KEYBOARD | Defines the keyboard that will be created             | `KEYBOARD ROWS COLS ...LAYER`                    |
-
-## Grammar
-
+| KEYBOARD | Defines the keyboard that will be created             | `KEYBOARD MACRO ROWS COLS LEDS ...LAYER`         |
 
 ## TODO
-todo
-set it up to run with QMK so it can make the .bin right away and delete the keymap files
-
-update readme
-
-remove hardcoded IDX values from transpiler and have the sentenes output them. since you have tokens from picking them up just make rules for converting them to c and them make a translate function
-
-add skip modifier for keys to skip color?
-
-NUMBER_OF_LED_LIGHTS
-
-add error checkign for C_code things where it looks at things like declared sicze and checks if that is correct 
-
-doing
-make transpiler
-sentence.rows()
-sentence.cols()
-sentence.leds()
+* add formal definitions for grammer to the readme
+* set it up to run with QMK so it can make the .bin right away and delete the keymap files
+* add skip modifier for keys to skip color?
+* need to make config.h generate
