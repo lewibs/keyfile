@@ -3,7 +3,9 @@ COMMENT this is my (lewibs) keyboard layout that I like to use for programming i
 INJECT colors.kf
 INJECT keys.kf
 
-KEYBOARD 4 12 _syms _nums _delete _mouse _fn _base
+KEYBOARD LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _syms _nums _delete _mouse _fn _base
+
+COLOR c_none 50 50 50
 
 KEY d_line LCTL LSFT del c_none
 KEY d_word LCTL del c_none

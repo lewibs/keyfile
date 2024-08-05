@@ -37,4 +37,6 @@ add error checkign for C_code things where it looks at things like declared sicz
 
 doing
 make transpiler
-
+sentence.rows()
+sentence.cols()
+sentence.leds()

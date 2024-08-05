@@ -1,89 +1,60 @@
-from Parsers import Token, GlobalDefinitions
-from env import PATH
+
+from Parsers import Token, GlobalDefinitions	
 import os
-from Parsers import SENTENCES
 
-class C_Segment:
-    def __init__(self, init):
-        self.code = init
-        self.lines = 0
+def write_to_c(path:str, sentences) -> None:
+    HEADER = """
+#include QMK_KEYBOARD_H
+#include "eeprom.h"
 
-    def add_code(self, code, newline=True):
-        self.code += code
-        if newline:
-            self.lines += 1
+extern rgb_config_t rgb_matrix_config;
+"""
 
-    def add_line(self, val):
-        self.add_code(f"\t{val};\n")
+    KEY_CODES = """
+const enum keycodes {
+INSERT_KEY_CODES
+};
+"""
 
-    def __str__(self) -> str:
-        return self.code
-    
-class C_Enum(C_Segment):
-    def __init__(self, name, INIT=None):
-        super().__init__(f"enum {name} = " + "{\n")
-        if INIT:
-            self.add_code(f"\t{name}={INIT}")
+    LAYER_NAMES = """
+const enum layers {
+INSERT_LAYER_NAMES
+};
+"""
 
-    def add_line(self, val):
-        self.add_code(f"\t{val},\n")
+    KEY_MAP = """
+const uint16_t PROGMEM keymaps[][INSERT_ROWS][INSERT_COLS] = {
+INSERT_KEY_LAYER
+};
+"""
 
-    def close(self):
-        self.code = self.code[:-2]
-        self.add_code("\n};")
+    def create_key_map_layer(string, layer, macro, entries):
+        return string + f"[{layer}] = {macro}({','.join(entries)}),\n"
 
-class C_List(C_Segment):
-    def __init__(self, type, name):
-        code = f"const {type} PROGMEM {name}[]"
-        super().__init__(code)
+    LED_MAP = """
+const uint8_t PROGMEM ledmap[][INSERT_LED_COUNT][3] = {
+INSERT_LED_LAYER
+};
+"""
 
-    def set_dims(self, rows, cols):
-        self.add_code(f"[{rows}][{cols}]" + " = {\n", newline=False)
+    def create_led_map_layer(string, layer, colors):
+        return string + f"[{layer}] = " + "{" + ",".join(colors) + "},\n"
 
-    def add_line(self, name):
-        line = f"\t[{name}] = " + "{"
+    DUAL_LAYERS = """
+uint8_t layer_state_set_user(uint8_t state) {
+INSERT_DUAL_LAYER
+return state
+}
+"""
 
-        if self.lines == 0:
-            self.add_code(line)
-        else:
-            self.add_code(",\n" + line)
+    def create_dual_layer(layerA, layerB, target_layer):
+        return f"state = update_tri_layer_state(state, {layerA}, {layerB}, {target_layer});"
 
-    def add_row(self, items):
-        self.add_code("{")
-        for item in items:
-            self.add_code(str(item) + ",")
-        self.code = self.code[:-1]
-        self.add_code("},")
-
-    def close_line(self):
-        self.code = self.code[:-1]
-        self.add_code("}")
-
-    def close(self):
-        self.add_code("\n};")
-
-class C_Func(C_Segment):
-    def __init__(self, type, name, inputs):
-        super().__init__(f"{type} {name}({" ".join(inputs)})" + "{\n")
-    def ret(self, ret):
-        self.add_code(f"\treturn {ret}")
-        self.add_code("\n};")
-
-class C_Head(C_Segment):
-    def __init__(self):
-        super().__init__("")
-
-    def add_line(self, val):
-        self.add_code(f"{val};\n")
-
-    def include(self, val):
-        self.add_code(f"#include {val}\n")
-
-RGB_MATRIX_FUNCTION = """
+    RGB_MATRIX_FUNCTION = """
 bool rgb_matrix_indicators_user(void) {
   int layer = biton32(layer_state);
 
-  for (int i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
+  for (int i = 0; i < INSERT_LED_COUNT; i++) {
     HSV hsv = {
       .h = pgm_read_byte(&ledmap[layer][i][0]),
       .s = pgm_read_byte(&ledmap[layer][i][1]),
@@ -102,64 +73,45 @@ bool rgb_matrix_indicators_user(void) {
 };
 """
 
-def write_to_c(path:str, sentences)->None:
-    # Read the template C file
-    with open(os.path.join(PATH, "misc", 'keymap.template.c'), 'r') as file:
-        c_code = file.read()
-
-    headers = C_Head()
-    headers.include("QMK_KEYBOARD_H")
-    headers.include('"eeprom.h"')
-    headers.add_line("extern rgb_config_t rgb_matrix_config")
-    rgb_shaders = C_Segment(RGB_MATRIX_FUNCTION)
-
-    keycodes = C_Enum("keycodes", "SAFE_RANGE")
-    layers = C_Enum("layers")
-    keymap = C_List("uint16_t", "keymap")
-    ledmap = C_List("uint8_t", "ledmap")
-    dualkeys = C_Func("uint8_t", "layer_state_set_user", ["uint8_t", "state"])
-     
-    #TODO remove this
-    rows=0
-    cols=0
+    LED_INJECTABLE = ""
+    KEY_INJECTABLE = ""
+    DUAL_INJECTABLE = ""
+    KEY_CODE_INJECTABLE = "NO_KEY = SAFE_RANGE,"
+    MACRO = ""
 
     for sentence in sentences:
-        if sentence.type == Token.LAYER:
-            name = sentence.words[1]
-            keys = sentence.words[2:]
-
-            keymap.add_line(name)
-            #TODO make this ref the variable for items in the row
-            codes = [SENTENCES[key].translate_code() for key in keys]
-            for row in range(0, len(codes), cols):
-                keymap.add_row(codes[row:row+cols])
-            keymap.close_line()
-            
-            ledmap.add_line(name)
-            colors = [SENTENCES[key].translate_color() for key in keys]
-            for color in colors:
-                ledmap.add_row(color)
-            ledmap.close_line()
-        
         if sentence.type == Token.KEYBOARD:
-            rows = int(sentence.words[2])
-            cols = int(sentence.words[3])
-            keymap.set_dims(sentence.words[2], sentence.words[3])
-            [layers.add_line(word) for word in sentence.words[4:]]
-            ledmap.set_dims(str(rows*cols), 3)
-        if sentence.type == Token.KEY and sentence.words[1].startswith(GlobalDefinitions.DUAL):
-            dualkeys.add_line(f"state = update_tri_layer_state(state, {sentence.words[2]}, {sentence.words[3]}, {sentence.words[4]})")
+            KEY_MAP = KEY_MAP.replace("INSERT_ROWS", sentence.rows())
+            KEY_MAP = KEY_MAP.replace("INSERT_COLS", sentence.cols())
+            LED_MAP = LED_MAP.replace("INSERT_LED_COUNT", sentence.leds())
+            RGB_MATRIX_FUNCTION = RGB_MATRIX_FUNCTION.replace("INSERT_LED_COUNT", sentence.leds())
+            LAYER_NAMES = LAYER_NAMES.replace("INSERT_LAYER_NAMES", ",\n".join(sentence.layers()))
+            MACRO = sentence.macro()
+        elif sentence.type == Token.LAYER:
+            keys = sentence.keys()
+            colors = sentence.leds()
+            layer_name = sentence.name()
 
-    keycodes.close()
-    layers.close()
-    keymap.close()
-    ledmap.close()
-    dualkeys.ret("state")
+            KEY_INJECTABLE = create_key_map_layer(KEY_INJECTABLE, layer_name, MACRO, keys)
+            LED_INJECTABLE = create_led_map_layer(LED_INJECTABLE, layer_name, colors)
+        elif sentence.type == Token.KEY:
+            if sentence.name().startswith(GlobalDefinitions.DUAL):
+                layers = sentence.layers()
+                DUAL_INJECTABLE += create_dual_layer(layers[0], layers[1], layers[2]) + "\n"
 
-    c_code = ""
 
-    for seg in [headers, keycodes, layers, keymap, ledmap, dualkeys, rgb_shaders]:
-        c_code += "\n" + str(seg)
+    #trim comma
+    LED_INJECTABLE = LED_INJECTABLE[:-2]
+    KEY_INJECTABLE = KEY_INJECTABLE[:-2]
+    KEY_CODE_INJECTABLE = KEY_CODE_INJECTABLE[:-2]
+    DUAL_INJECTABLE = DUAL_INJECTABLE[:-1]
+
+    LED_MAP = LED_MAP.replace("INSERT_LED_LAYER", LED_INJECTABLE)
+    KEY_MAP = KEY_MAP.replace("INSERT_KEY_LAYER", KEY_INJECTABLE)
+    DUAL_LAYERS = DUAL_LAYERS.replace("INSERT_DUAL_LAYER", DUAL_INJECTABLE)
+    KEY_CODES = KEY_CODES.replace("INSERT_KEY_CODES", KEY_CODE_INJECTABLE)
+
+    c_code = f"{HEADER}{KEY_CODES}{LAYER_NAMES}{KEY_MAP}{LED_MAP}{DUAL_LAYERS}{RGB_MATRIX_FUNCTION}"
 
     with open(os.path.join(path, 'keymap.c'), 'w') as file:
         file.write(c_code)

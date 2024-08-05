@@ -24,6 +24,7 @@ class Words:
     DECLARE_LAYER="declare_layer"
     KEY_MODIFIER="key_modifier"
     LAYER_MODIFIER="layer_modifier"
+    MACRO="macro"
 
 class GlobalDefinitions:
     KEYBOARD="keyboard"
@@ -196,10 +197,16 @@ class BaseSentence():
     def consume_comment(self, word:str):
         self.grammer.append(Words.COMMENT)
 
+    def consume_macro(self, word:str):
+        return
+
 class ColorSentence(BaseSentence):
     def __init__(self, token):
         super().__init__(Token.COLOR, [Words.TOKEN, Words.INITIALIZE, Words.COLOR, Words.COLOR, Words.COLOR])
         self.consume(token)
+
+    def color(self):
+        return "{" + ",".join(self.words[2:]) + "}"
 
 class KeySentence(BaseSentence):
     _dual_keys = 0
@@ -222,37 +229,70 @@ class KeySentence(BaseSentence):
 
         super().consume_initialize(word)
 
-    def translate_code(self):
-        mods = self.words[2:-1]
-        inner = mods[-1]
-        if inner in SENTENCES and SENTENCES[inner].type == Token.KEY:
-            inner = SENTENCES[inner].translate_code()
-
-        func = ""
-        close = ""
-        for mod in mods[:-1]:
-            func += mod + "("
-            close += ")"
-        func = func+inner+close        
-        return func
+    def name(self):
+        return self.words[1]
     
-    def translate_color(self):
-        color = self.words[-1]
-        return SENTENCES[color].words[-3:]
+    def layers(self):
+        if not self.name().startswith(GlobalDefinitions.DUAL):
+            raise ParserException("Usage error: trying to get layers on a normal key")
+    
+        return self.words[2:]
+
+    def keycode(self):
+        if self.name().startswith(GlobalDefinitions.DUAL):
+            raise ParserException("Usage error: trying to get keycode on a dual key")
+        
+        code = self.words[-2]
+        modifiers = self.words[2:-2]
+        keycode = ""
+
+        for modifier in modifiers:
+            keycode+=f"{modifier}("
+        
+        #TODO
+        if code in SENTENCES and SENTENCES[code].type == Token.KEY:
+            keycode += SENTENCES[code].keycode()
+        else:
+            keycode += code
+
+        for i in range(len(modifiers)):
+            keycode+=")"
+
+        return keycode
+
+
+    def color(self):
+        if self.name().startswith(GlobalDefinitions.DUAL):
+            raise ParserException("Usage error: trying to get color on a dual key")
+        
+        return SENTENCES[self.words[-1]].color()
+
+    # def translate_color(self):
+    #     color = self.words[-1]
+    #     return SENTENCES[color].words[-3:]
 
 class LayerSentence(BaseSentence):
     def __init__(self, token):
-        super().__init__(Token.LAYER, [Words.TOKEN, Words.INITIALIZE]) #...Words.KEY_REF
+        super().__init__(Token.LAYER, [Words.TOKEN, Words.INITIALIZE, Words.KEY_REF]) #...Words.KEY_REF
 
         if GlobalDefinitions.KEYBOARD not in SENTENCES:
             raise ParserException("Syntax Error: KEYBOARD must be initialized before LAYERS")
 
-        keyboard_token = SENTENCES[GlobalDefinitions.KEYBOARD]
-
-        for i in range(keyboard_token.rows() * keyboard_token.cols()):
-            self.grammer.append(Words.KEY_REF)
-
         self.consume(token)
+
+    def consume_key_ref(self, word: str):
+        self.grammer.append(Words.KEY_REF)
+        super().consume_key_ref(word)
+
+    def name(self):
+        return self.words[1]
+
+    def keys(self):
+        return [SENTENCES[key_ref].keycode() for key_ref in self.words[2:]]
+
+    def leds(self):
+        return [SENTENCES[key_ref].color() for key_ref in self.words[2:]]
+
 
 class InjectSentence(BaseSentence):
     def __init__(self, token):
@@ -272,15 +312,24 @@ class CommentSentence(BaseSentence):
 
 class KeyboardSentence(BaseSentence):
     def __init__(self, token):
-        super().__init__(Token.KEYBOARD, [Words.TOKEN, Words.INITIALIZE, Words.UINT, Words.UINT, Words.DECLARE_LAYER]) #...Words.DECLARE_LAYER
+        super().__init__(Token.KEYBOARD, [Words.TOKEN, Words.INITIALIZE, Words.MACRO, Words.MACRO, Words.MACRO, Words.MACRO, Words.DECLARE_LAYER]) #...Words.DECLARE_LAYER
         self.consume(token)
         self.consume(GlobalDefinitions.KEYBOARD)
 
     def rows(self):
-        return int(self.words[2])
+        return self.words[3]
 
     def cols(self):
-        return int(self.words[3])
+        return self.words[4]
+
+    def leds(self):
+        return self.words[5]
+
+    def macro(self):
+        return self.words[2] 
+    
+    def layers(self):
+        return self.words[6:]
 
     def consume(self, word: str):
         res = super().consume(word)
