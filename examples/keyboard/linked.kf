@@ -129,7 +129,7 @@ KEY p_down KC_MS_WH_DOWN c_pink
 KEY home KC_HOME c_pink
 KEY end KC_END c_pink
 KEY calc KC_CALCULATOR c_blue
-KEYBOARD keyboard LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _base _syms _nums _delete _mouse _fn
+KEYBOARD keyboard LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _base _syms _nums _delete _mouse _fn _macro
 KEY d_line LCTL LSFT del c_red
 KEY d_word LCTL del c_red
 KEY b_word LCTL bac c_red
@@ -140,10 +140,15 @@ KEY fn MO _fn c_yellow
 KEY syms MO _syms c_yellow
 KEY nums MO _nums c_yellow
 KEY mouse MO _mouse c_yellow
+KEY macro MO _macro c_yellow
 KEY DUAL _syms _nums _delete
-LAYER _base q w e r t del bac y u i o p a s d f g ' enter h j k l ; z x c v b esc tab n m , . / ctl alt fn sft syms space SKIP nums mouse no os alt
+COMMENT the macro is not being named correctly
+STRING s_for for (let i = 0; i < s.length; i++) {
+KEY MACRO m_for s_for c_cyan
+LAYER _base q w e r t del bac y u i o p a s d f g ' enter h j k l ; z x c v b esc tab n m , . / ctl alt fn sft syms space SKIP nums mouse macro os alt
+LAYER _macro no no no no no TRANS TRANS no no no no no no no no m_for no TRANS TRANS no no no no no no no no no no TRANS TRANS no no no no no TRANS TRANS TRANS TRANS TRANS TRANS SKIP TRANS TRANS TRANS TRANS TRANS
 LAYER _syms no no no no no TRANS TRANS no ! { } @ no no no no no TRANS TRANS no # ( ) $ no no no no no TRANS TRANS no | [ ] & TRANS TRANS TRANS TRANS TRANS TRANS SKIP TRANS TRANS TRANS TRANS TRANS
 LAYER _nums 0 1 2 3 no TRANS TRANS no % ~ \ no . 4 5 6 no TRANS TRANS no - + / * = 7 8 9 no calc TRANS no no < > ^ TRANS TRANS TRANS TRANS TRANS TRANS SKIP TRANS TRANS TRANS TRANS TRANS
 LAYER _delete no no no no no TRANS TRANS no no no no no d_line tab d_word del no no TRANS no bac b_word enter b_line no no no no no TRANS TRANS no no no no no TRANS TRANS TRANS TRANS TRANS TRANS SKIP TRANS TRANS TRANS TRANS TRANS
-LAYER _mouse no r_clk m_up l_clk no TRANS TRANS no enter up no no no m_left m_down m_right no no TRANS w_left left down right w_right p_left p_up no p_down p_right TRANS TRANS no home no end no TRANS TRANS TRANS TRANS TRANS TRANS SKIP TRANS TRANS TRANS TRANS TRANS
+LAYER _mouse no r_clk m_up l_clk no TRANS TRANS no no up no no no m_left m_down m_right no no TRANS w_left left down right w_right p_left p_up no p_down p_right TRANS TRANS no home no end no TRANS TRANS TRANS TRANS TRANS TRANS SKIP TRANS TRANS TRANS TRANS TRANS
 LAYER _fn f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 no no no no no no brt- brt+ vol- vol+ no vol_m no no no no no no no no no no no pause TRANS TRANS TRANS TRANS TRANS TRANS SKIP TRANS TRANS TRANS TRANS TRANS

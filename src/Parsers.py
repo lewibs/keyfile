@@ -9,6 +9,7 @@ class Token:
     KEY="KEY"
     LAYER="LAYER"
     KEYBOARD="KEYBOARD"
+    STRING="STRING"
 
 class Words:
     TOKEN="token"
@@ -21,16 +22,18 @@ class Words:
     COLOR_REF="color_ref"
     KEY_REF="key_ref"
     LAYER_REF="layer_ref"
+    STRING_REF="string_ref"
     DECLARE_LAYER="declare_layer"
     KEY_MODIFIER="key_modifier"
     LAYER_MODIFIER="layer_modifier"
-    MACRO="macro"
+    STRING="string"
 
 class GlobalDefinitions:
     KEYBOARD="keyboard"
     DUAL="DUAL"
     SKIP="SKIP"
     TRANS="TRANS"
+    MACRO="MACRO"
 
 SENTENCES = {}
 SENTENCES_ARR = []
@@ -113,12 +116,19 @@ class BaseSentence():
         self.type = sentence_type
         self.grammer = grammer
         self.words = []
+        self._name = None
 
     def is_complete(self):
         if len(self.grammer) == 0:
             return True
         else:
             return False
+        
+    def name(self):
+        if self._name == None:
+            raise Exception(f"Name is not a valid call for {self.type}")
+
+        return self._name
 
     def consume(self, word:str):
 
@@ -138,6 +148,11 @@ class BaseSentence():
         if word not in SENTENCES:
             _declare(word, self.type)
         _initialize(word, self)
+
+        if self._name in SENTENCES:
+            del SENTENCES[self._name]
+
+        self._name = word
     
     def consume_path(self, word:str):
         #This is an Exception because it will occur only when there is an issue with the parsing
@@ -157,6 +172,9 @@ class BaseSentence():
 
         if word not in SENTENCES:
             raise ParserException(f"Not Defined: {token_type} {word} is used before being declared")
+
+    def consume_string_ref(self, word:str):
+        self.consume_ref(Token.STRING, word)
 
     def consume_color_ref(self, word:str):
         self.consume_ref(Token.COLOR, word)
@@ -199,8 +217,20 @@ class BaseSentence():
     def consume_comment(self, word:str):
         self.grammer.append(Words.COMMENT)
 
-    def consume_macro(self, word:str):
+    def consume_string(self, word:str):
         return
+    
+class StringSentence(BaseSentence):
+    def __init__(self, token):
+        super().__init__(Token.STRING, [Words.TOKEN, Words.INITIALIZE, Words.STRING])
+        self.consume(token)
+
+    def consume_string(self, word: str):
+        self.grammer.append(Words.STRING)
+        return super().consume_string(word)
+    
+    def string(self):
+        return " ".join(self.words[2:])
 
 class ColorSentence(BaseSentence):
     def __init__(self, token):
@@ -230,14 +260,25 @@ class KeySentence(BaseSentence):
             self.words.append("KC_TRANSPARENT")
         elif word == GlobalDefinitions.SKIP:
             self.words.append("KC_NO")
+        elif word == GlobalDefinitions.MACRO:
+            self.grammer += [Words.INITIALIZE, Words.STRING_REF, Words.COLOR_REF]
         else:
             self.grammer += [Words.KEYCODE, Words.COLOR_REF]
 
         super().consume_initialize(word)
 
-    def name(self):
-        return self.words[1]
-    
+    def string(self):
+        if self.key_type() != GlobalDefinitions.MACRO:
+            raise Exception("this method is not for this key type")
+        
+        return SENTENCES[self.words[-2]].string()
+
+    def key_type(self):
+        if self.words[1] not in SENTENCES:
+            return self.words[1]
+
+        return None
+
     def layers(self):
         if not self.name().startswith(GlobalDefinitions.DUAL):
             raise ParserException("Usage error: trying to get layers on a normal key")
@@ -245,6 +286,9 @@ class KeySentence(BaseSentence):
         return self.words[2:]
 
     def keycode(self):
+        if self.key_type() == GlobalDefinitions.MACRO:
+            return self.name()
+
         if self.name().startswith(GlobalDefinitions.DUAL):
             raise ParserException("Usage error: trying to get keycode on a dual key")
         
@@ -261,7 +305,6 @@ class KeySentence(BaseSentence):
         for modifier in modifiers:
             key_code+=f"{modifier}("
         
-        #TODO
         if code in SENTENCES and SENTENCES[code].type == Token.KEY:
             key_code += SENTENCES[code].keycode()
         else:
@@ -291,9 +334,6 @@ class LayerSentence(BaseSentence):
     def consume_key_ref(self, word: str):
         self.grammer.append(Words.KEY_REF)
         super().consume_key_ref(word)
-
-    def name(self):
-        return self.words[1]
 
     def key_refs(self):
         return self.words[2:]
@@ -338,7 +378,7 @@ class CommentSentence(BaseSentence):
 
 class KeyboardSentence(BaseSentence):
     def __init__(self, token):
-        super().__init__(Token.KEYBOARD, [Words.TOKEN, Words.INITIALIZE, Words.MACRO, Words.MACRO, Words.MACRO, Words.MACRO, Words.DECLARE_LAYER]) #...Words.DECLARE_LAYER
+        super().__init__(Token.KEYBOARD, [Words.TOKEN, Words.INITIALIZE, Words.STRING, Words.STRING, Words.STRING, Words.STRING, Words.DECLARE_LAYER]) #...Words.DECLARE_LAYER
         self.consume(token)
         self.consume(GlobalDefinitions.KEYBOARD)
 
@@ -369,5 +409,6 @@ Sentences={
     Token.COLOR:ColorSentence,
     Token.KEY:KeySentence,
     Token.LAYER:LayerSentence,
-    Token.KEYBOARD:KeyboardSentence
+    Token.KEYBOARD:KeyboardSentence,
+    Token.STRING:StringSentence
 }
