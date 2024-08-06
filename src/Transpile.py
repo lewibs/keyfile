@@ -17,13 +17,13 @@ INSERT_MACROS
     def make_send_string_macro(code, string, delay):
         OPEN = "{"
         CLOSE = "}"
-        return f"""
+        return f'''
     case {code}:
         if (record->event.pressed) {OPEN}
-            SEND_STRING_DELAY('{string}', {delay});
+            SEND_STRING_DELAY("{string}", {delay});
         {CLOSE}
         break;
-"""
+'''
 
     CONFIG = """
 #pragma once
@@ -159,7 +159,7 @@ bool rgb_matrix_indicators_user(void) {
                 DUAL_INJECTABLE += create_dual_layer(layers[0], layers[1], layers[2]) + "\n"
             elif sentence.key_type() == GlobalDefinitions.MACRO:
                 KEY_CODE_INJECTABLE += f"{sentence.name()},\n"
-                MACRO_INJECTABLE += make_send_string_macro(sentence.name(), sentence.string(), 50) 
+                MACRO_INJECTABLE += make_send_string_macro(sentence.name(), sentence.string(), 40) 
 
 
    

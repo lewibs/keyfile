@@ -20,9 +20,19 @@ KEY macro MO _macro c_yellow
 
 KEY DUAL _syms _nums _delete
 
-COMMENT the macro is not being named correctly
-STRING s_for for (let i = 0; i < s.length; i++) {
-KEY MACRO m_for s_for c_cyan
+STRING s_eli I love eli <3
+KEY MACRO m_eli s_eli c_pink
+STRING for for
+KEY MACRO m_for for c_cyan
+STRING while while
+KEY MACRO m_while while c_cyan
+STRING const const
+KEY MACRO m_const const c_cyan
+STRING else else
+KEY MACRO m_else else c_cyan
+
+STRING elif else if
+KEY MACRO m_elif elif c_cyan
 
 LAYER _base
 q       w       e       r       t       del     bac      y       u       i       o       p
@@ -31,9 +41,9 @@ z       x       c       v       b       esc     tab      n       m       ,      
 ctl     alt     fn      sft     syms    space   SKIP     nums    mouse   macro   os      alt
 
 LAYER _macro
-no      no      no      no      no      TRANS   TRANS    no      no      no      no       no            
+m_eli   m_while m_else  no      no      TRANS   TRANS    no      no      m_elif  no       no            
 no      no      no      m_for   no      TRANS   TRANS    no      no      no      no       no          
-no      no      no      no      no      TRANS   TRANS    no      no      no      no       no        
+no      no      m_const no      no      TRANS   TRANS    no      no      no      no       no        
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
 LAYER _syms
