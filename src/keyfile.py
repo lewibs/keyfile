@@ -51,7 +51,6 @@ def write_sentences_to_linked_file(args, sentences):
 
 def main() -> None:
     args = parse_args()
-    args.keyfile = "C:/Users/lewibs/github/keyfile/examples/lewibs.planck.ez.glow.kf"
     os.makedirs(args.output, exist_ok=True)
     # having to go through the code again and again causes xO(n) which could easily be improved.
     # however, the cleanness of this code will suffer and since it is unlikly that the .kfs will be that long, i think its safe to keep it slow

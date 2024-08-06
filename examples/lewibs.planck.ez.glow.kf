@@ -20,8 +20,6 @@ KEY macro MO _macro c_yellow
 
 KEY DUAL _syms _nums _delete
 
-STRING s_eli I love eli <3
-KEY MACRO m_eli s_eli c_pink
 STRING for for
 KEY MACRO m_for for c_cyan
 STRING while while
@@ -41,7 +39,7 @@ z       x       c       v       b       esc     tab      n       m       ,      
 ctl     alt     fn      sft     syms    space   SKIP     nums    mouse   macro   os      alt
 
 LAYER _macro
-m_eli   m_while m_else  no      no      TRANS   TRANS    no      no      m_elif  no       no            
+no      m_while m_else  no      no      TRANS   TRANS    no      no      m_elif  no       no            
 no      no      no      m_for   no      `       TRANS    no      no      no      no       no          
 no      no      m_const no      no      TRANS   TRANS    no      no      no      no       no        
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
