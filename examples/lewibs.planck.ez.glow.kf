@@ -42,19 +42,19 @@ ctl     alt     fn      sft     syms    space   SKIP     nums    mouse   macro  
 
 LAYER _macro
 m_eli   m_while m_else  no      no      TRANS   TRANS    no      no      m_elif  no       no            
-no      no      no      m_for   no      TRANS   TRANS    no      no      no      no       no          
+no      no      no      m_for   no      `       TRANS    no      no      no      no       no          
 no      no      m_const no      no      TRANS   TRANS    no      no      no      no       no        
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
 LAYER _syms
 no      no      no      no      no      TRANS   TRANS    no      !       {       }        @            
-no      no      no      no      no      TRANS   TRANS    no      #       (       )        $           
+no      no      no      no      no      `       TRANS    no      #       (       )        $           
 no      no      no      no      no      TRANS   TRANS    no      |       [       ]        &          
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
 LAYER _nums
 0       1       2       3       no      TRANS   TRANS    no      %       ~       \        no
-.       4       5       6       no      TRANS   TRANS    no      -       +       /        *         
+.       4       5       6       no      `       TRANS    no      -       +       /        *         
 =       7       8       9       no      calc    TRANS    no      no      <       >        ^         
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
