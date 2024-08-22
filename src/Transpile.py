@@ -1,5 +1,6 @@
 
-from Parsers import Token, GlobalDefinitions, SENTENCES	
+from Parsers import Token, GlobalDefinitions, SENTENCES
+from Exceptions import ParserException
 import os
 
 def write_to_c(path:str, sentences) -> None:
@@ -52,7 +53,7 @@ INSERT_MACROS
 #define FIRMWARE_VERSION u8"rlj79/RLPW6"
 #define RAW_USAGE_PAGE 0xFF60
 #define RAW_USAGE_ID 0x61
-#define LAYER_STATE_32BIT
+#define LAYER_STATE_LAYER_COUNTBIT
 
 #define RGB_MATRIX_STARTUP_SPD 60
 """
@@ -95,7 +96,7 @@ INSERT_LED_LAYER
         return string + f"[{layer}] = " + "{" + ",".join(colors) + "},\n"
 
     DUAL_LAYERS = """
-uint8_t layer_state_set_user(uint8_t state) {
+uintLAYER_COUNT_t layer_state_set_user(uintLAYER_COUNT_t state) {
 INSERT_DUAL_LAYER
 return state;
 }
@@ -145,6 +146,12 @@ bool rgb_matrix_indicators_user(void) {
             LED_MAP = LED_MAP.replace("INSERT_LED_COUNT", sentence.leds())
             RGB_MATRIX_FUNCTION = RGB_MATRIX_FUNCTION.replace("INSERT_LED_COUNT", sentence.leds())
             LAYER_NAMES = LAYER_NAMES.replace("INSERT_LAYER_NAMES", ",\n".join(sentence.layers()))
+            layer_count = len(sentence.layers())
+            layer_count = 8 if layer_count < 8 else 16 if layer_count < 16 else 32 if layer_count < 32 else -1
+            if layer_count == -1:
+                raise ParserException("Max Layers: 32 is the maximum amount of layers")
+            CONFIG = CONFIG.replace("LAYER_COUNT", str(layer_count))
+            DUAL_LAYERS = DUAL_LAYERS.replace("LAYER_COUNT", str(layer_count))
             MACRO = sentence.macro()
         elif sentence.type == Token.LAYER:
             keys = sentence.keys()
