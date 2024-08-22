@@ -3,20 +3,26 @@ COMMENT this is my (lewibs) keyboard layout that I like to use for programming i
 INJECT colors.kf
 INJECT keys.kf
 
-KEYBOARD LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _base _syms _nums _delete _mouse _fn _macro
+KEYBOARD LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _base _mac _mouse_mac _syms _nums _delete _mouse _fn _macro
 
 KEY d_line LCTL LSFT del c_red
 KEY d_word LCTL del c_red
+KEY dm_word LGUI del c_red
 KEY b_word LCTL bac c_red
+KEY bm_word LGUI bac c_red
 KEY b_line LCTL LSFT bac c_red
 KEY w_left LCTL left c_pink
+KEY wm_left LGUI left c_pink
 KEY w_right RCTL right c_pink
+KEY wm_right LGUI right c_pink
 
 KEY fn MO _fn c_yellow
 KEY syms MO _syms c_yellow
 KEY nums MO _nums c_yellow
 KEY mouse MO _mouse c_yellow
 KEY macro MO _macro c_yellow
+KEY mac TG _mac c_yellow
+KEY m_mouse MO _mouse_mac c_orange
 
 KEY DUAL _syms _nums _delete
 
@@ -28,6 +34,8 @@ STRING const const
 KEY MACRO m_const const c_cyan
 STRING else else
 KEY MACRO m_else else c_cyan
+STRING brew brew
+KEY MACRO m_brew brew c_cyan
 
 STRING elif else if
 KEY MACRO m_elif elif c_cyan
@@ -38,10 +46,16 @@ a       s       d       f       g       '       enter    h       j       k      
 z       x       c       v       b       esc     tab      n       m       ,       .       /
 ctl     alt     fn      sft     syms    space   SKIP     nums    mouse   macro   os      alt
 
+LAYER _mac
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS    TRANS   TRANS   TRANS   TRANS    TRANS
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS    TRANS   TRANS   TRANS   TRANS    TRANS           
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS    TRANS   TRANS   TRANS   TRANS    TRANS     
+cmd     opt     TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   m_mouse TRANS   TRANS    cmd
+
 LAYER _macro
 no      m_while m_else  no      no      TRANS   TRANS    no      no      m_elif  no       no            
 no      no      no      m_for   no      `       TRANS    no      no      no      no       no          
-no      no      m_const no      no      TRANS   TRANS    no      no      no      no       no        
+no      no      m_const no      m_brew  TRANS   TRANS    no      no      no      no       no        
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
 LAYER _syms
@@ -56,15 +70,23 @@ LAYER _nums
 =       7       8       9       no      calc    TRANS    no      no      <       >        ^         
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
+COMMENT figure out how to make a dual key replacment layer if its in mac state
 LAYER _delete
 no      no      no      no      no      TRANS   TRANS    no      no      no      no       no
-d_line  tab     d_word  del     no      no      TRANS    no      bac     b_word  enter    b_line
+dm_word tab     d_word  del     no      no      TRANS    no      bac     b_word  enter    bm_word
 no      no      no      no      no      TRANS   TRANS    no      no      no      no       no
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
 LAYER _mouse
 no     r_clk    m_up    l_clk   no      TRANS   TRANS    no      no      up      no       no
 no     m_left   m_down  m_right no      no      TRANS    w_left  left    down    right    w_right
+p_left p_up     no      p_down  p_right TRANS   TRANS    no      home    no      end      no
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
+
+COMMENT figoure out how to do a passthrough to another the _mouse layer
+LAYER _mouse_mac
+no     r_clk    m_up    l_clk   no      TRANS   TRANS    no      no      up      no       no
+no     m_left   m_down  m_right no      no      TRANS    wm_left left    down    right    wm_right
 p_left p_up     no      p_down  p_right TRANS   TRANS    no      home    no      end      no
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 

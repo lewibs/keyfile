@@ -70,6 +70,8 @@ KEY tab KC_TAB c_purple
 KEY ctl KC_LEFT_CTRL c_yellow
 KEY alt KC_LEFT_ALT c_yellow
 KEY os KC_LEFT_GUI c_yellow
+KEY cmd KC_RIGHT_GUI c_orange
+KEY opt KC_ROPT c_orange
 KEY sft KC_LSFT c_yellow
 
 KEY enter KC_ENTER c_purple
