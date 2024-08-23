@@ -22,7 +22,7 @@ KEY syms MO _syms c_yellow
 KEY nums MO _nums c_yellow
 KEY mouse MO _mouse c_yellow
 KEY macro MO _macro c_yellow
-KEY mac TG _mac c_yellow
+KEY mac DF _mac c_yellow
 KEY m_mouse MO _mouse_mac c_orange
 
 KEY DUAL _syms _nums _delete
@@ -48,10 +48,10 @@ z       x       c       v       b       esc     tab      n       m       ,      
 ctl     alt     fn      sft     syms    space   SKIP     nums    mouse   macro   os      alt
 
 LAYER _mac
-TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS    TRANS   TRANS   TRANS   TRANS    TRANS
-TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS    TRANS   TRANS   TRANS   TRANS    TRANS           
-TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS    TRANS   TRANS   TRANS   TRANS    TRANS     
-cmd     ctl     TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   m_mouse TRANS   search   opt
+q       w       e       r       t       del     bac      y       u       i       o       p
+a       s       d       f       g       '       enter    h       j       k       l       ;
+z       x       c       v       b       esc     tab      n       m       ,       .       /    
+cmd     ctl     fn      sft     syms    space   SKIP     nums   m_mouse macro   search   opt
 
 LAYER _macro
 no      m_while m_else  no      no      TRANS   TRANS    no      no      m_elif  no       no            
