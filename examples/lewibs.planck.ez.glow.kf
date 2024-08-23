@@ -94,5 +94,5 @@ TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS  
 LAYER _fn
 f1      f2      f3      f4      f5      f6      f7       f8      f9      f10      f11     f12
 no      no      no      no      no      no      brt-     brt+    vol-    vol+     no      vol_m
-no      no      no      no      no      no      no       no      no      no       no      pause 
+mac     no      no      no      no      no      no       no      no      no       no      pause 
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
