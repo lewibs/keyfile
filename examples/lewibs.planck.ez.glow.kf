@@ -22,7 +22,8 @@ KEY syms MO _syms c_yellow
 KEY nums MO _nums c_yellow
 KEY mouse MO _mouse c_yellow
 KEY macro MO _macro c_yellow
-KEY mac DF _mac c_yellow
+KEY mac DF _mac c_orange
+KEY base DF _base c_yellow
 KEY m_mouse MO _mouse_mac c_orange
 
 KEY DUAL _syms _nums _delete
@@ -94,5 +95,5 @@ TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS  
 LAYER _fn
 f1      f2      f3      f4      f5      f6      f7       f8      f9      f10      f11     f12
 no      no      no      no      no      no      brt-     brt+    vol-    vol+     no      vol_m
-mac     no      no      no      no      no      no       no      no      no       no      pause 
+mac     base    no      no      no      no      no       no      no      no       no      pause 
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
