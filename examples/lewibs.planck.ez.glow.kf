@@ -7,14 +7,14 @@ KEYBOARD LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _base _
 
 KEY d_line LCTL LSFT del c_red
 KEY d_word LCTL del c_red
-KEY dm_word LGUI del c_red
+KEY dm_word LALT del c_red
 KEY b_word LCTL bac c_red
-KEY bm_word LGUI bac c_red
+KEY bm_word LALT bac c_red
 KEY b_line LCTL LSFT bac c_red
 KEY w_left LCTL left c_pink
-KEY wm_left LGUI left c_pink
+KEY wm_left LALT left c_pink
 KEY w_right RCTL right c_pink
-KEY wm_right LGUI right c_pink
+KEY wm_right LALT right c_pink
 
 KEY fn MO _fn c_yellow
 KEY syms MO _syms c_yellow
@@ -50,7 +50,7 @@ LAYER _mac
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS    TRANS   TRANS   TRANS   TRANS    TRANS
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS    TRANS   TRANS   TRANS   TRANS    TRANS           
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS    TRANS   TRANS   TRANS   TRANS    TRANS     
-cmd     opt     TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   m_mouse TRANS   TRANS    cmd
+cmd     ctl     TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   m_mouse TRANS   TRANS    opt
 
 LAYER _macro
 no      m_while m_else  no      no      TRANS   TRANS    no      no      m_elif  no       no            
