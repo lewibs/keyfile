@@ -188,6 +188,7 @@ More Examples: https://github.com/lewibs/keyfile/blob/main/examples
 ## TODO
 * set it up to run with QMK so it can make the .bin right away and delete the keymap files
 * need to make config.h generate
+* rules.mk!!!!
 
 ## Build:
 python ./src/keyfile.py -i C:\Users\lewibs\github\keyfile\examples\lewibs.planck.ez.glow.kf -n keyboard -o ./examples/output

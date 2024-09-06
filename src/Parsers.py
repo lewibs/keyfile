@@ -38,7 +38,7 @@ class GlobalDefinitions:
 SENTENCES = {}
 SENTENCES_ARR = []
 FILES = {}
-KEY_MODIFIERS = {"LSFT", "RSFT", "LCTL", "RCTL", "LALT", "RALT", "MOD_LGUI"}
+KEY_MODIFIERS = {"LSFT", "RSFT", "LCTL", "RCTL", "LALT", "RALT", "LGUI", "RGUI"}
 LAYER_MODIFIERS = {"MO", "TG", "TT", "DF"}
 
 def parse_keyfile(path:str)->None:
