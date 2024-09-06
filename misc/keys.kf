@@ -59,7 +59,7 @@ KEY f10 KC_F10 c_blue
 KEY f11 KC_F11 c_blue
 KEY f12 KC_F12 c_none
 KEY n_song KC_MNXT c_pink
-KEY p_song KC_MNPV c_pink
+KEY p_song KC_MPRV c_pink
 KEY brt- KC_BRIGHTNESS_DOWN c_red
 KEY brt+ KC_BRIGHTNESS_UP c_green
 KEY vol- KC_AUDIO_VOL_DOWN c_red
