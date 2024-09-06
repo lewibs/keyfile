@@ -91,15 +91,15 @@ no      no      no      no      no      TRANS   TRANS    no      no      no     
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
 LAYER _mouse
-paste   r_clk    m_up    l_clk   no      TRANS   TRANS    m_ac_2  l_clk   up      r_clk   no
-copy    m_left   m_down  m_right no      no      TRANS    w_left  left    down    right   w_right
+no      r_clk    m_up    l_clk   paste   TRANS   TRANS    m_ac_2  l_clk   up      r_clk   no
+no      m_left   m_down  m_right copy    no      TRANS    w_left  left    down    right   w_right
 p_left  p_up     no      p_down  p_right TRANS   TRANS    no      home    no      end     no
 TRANS   TRANS    TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS   TRANS
 
 COMMENT figoure out how to do a passthrough to another the _mouse layer
 LAYER _mouse_mac
-m_paste r_clk   m_up    l_clk   no      TRANS   TRANS   m_ac_2  l_clk   up      r_clk   no
-m_copy  m_left  m_down  m_right no      no      TRANS   wm_left left    down    right   wm_right
+no      r_clk   m_up    l_clk   m_paste TRANS   TRANS   m_ac_2  l_clk   up      r_clk   no
+no      m_left  m_down  m_right m_copy  no      TRANS   wm_left left    down    right   wm_right
 p_right p_down  no      p_up    p_left  TRANS   TRANS   no      home    no      end     no
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP    TRANS   TRANS   TRANS   TRANS   TRANS
 
