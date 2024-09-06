@@ -21,7 +21,13 @@ KEY wm_left LALT left c_pink
 KEY w_right RCTL right c_pink
 KEY wm_right LALT right c_pink
 
+
 KEY search LGUI space c_yellow
+KEY copy LCTL c c_orange
+KEY paste LCTL v c_orange
+KEY m_copy LGUI c c_orange
+KEY m_paste LGUI v c_orange
+
 KEY fn MO _fn c_yellow
 KEY syms MO _syms c_yellow
 KEY nums MO _nums c_yellow
@@ -60,22 +66,22 @@ z       x       c       v       b       esc     tab      n       m       ,      
 cmd     opt     fn      sft     syms    space   SKIP     nums   m_mouse macro   search   ctl
 
 LAYER _macro
-no      m_while m_else  no      no      TRANS   TRANS    no      no      m_elif  no       no            
-no      no      no      m_for   no      `       TRANS    no      no      no      no       no          
-no      no      m_const no      m_brew  TRANS   TRANS    no      no      no      no       no        
-TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
+no      m_while m_else  no      no      TRANS   TRANS    no      no      m_elif  no      no            
+no      no      no      m_for   no      `       TRANS    no      no      no      no      no          
+no      no      m_const no      m_brew  TRANS   TRANS    no      no      no      no      no        
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS   TRANS
 
 LAYER _syms
-no      no      no      no      no      TRANS   TRANS    no      !       {       }        @            
-no      no      no      no      no      `       TRANS    no      #       (       )        $           
-no      no      no      no      no      TRANS   TRANS    no      |       [       ]        &          
-TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
+no      no      no      no      no      TRANS   TRANS    no      !       {       }       @            
+no      no      no      no      no      `       TRANS    no      #       (       )       $           
+no      no      no      no      no      TRANS   TRANS    no      |       [       ]       &          
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS   TRANS
 
 LAYER _nums
-0       1       2       3       no      TRANS   TRANS    no      %       ~       \        no
-.       4       5       6       no      `       TRANS    no      -       +       /        *         
-=       7       8       9       no      calc    TRANS    no      no      <       >        ^         
-TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
+0       1       2       3       no      TRANS   TRANS    no      %       ~       \       no
+.       4       5       6       no      `       TRANS    no      -       +       /       *         
+=       7       8       9       no      calc    TRANS    no      no      <       >       ^         
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS   TRANS
 
 COMMENT figure out how to make a dual key replacment layer if its in mac state
 LAYER _delete
@@ -85,20 +91,20 @@ no      no      no      no      no      TRANS   TRANS    no      no      no     
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
 LAYER _mouse
-no     r_clk    m_up    l_clk   no      TRANS   TRANS    m_ac_0  m_ac_1  up      l_clk    no
-no     m_left   m_down  m_right no      no      TRANS    w_left  left    down    right    w_right
-p_left p_up     no      p_down  p_right TRANS   TRANS    no      home    no      end      no
-TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
+paste   r_clk    m_up    l_clk   no      TRANS   TRANS    m_ac_2  l_clk   up      r_clk   no
+copy    m_left   m_down  m_right no      no      TRANS    w_left  left    down    right   w_right
+p_left  p_up     no      p_down  p_right TRANS   TRANS    no      home    no      end     no
+TRANS   TRANS    TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS   TRANS
 
 COMMENT figoure out how to do a passthrough to another the _mouse layer
 LAYER _mouse_mac
-no     r_clk    m_up    l_clk   no      TRANS   TRANS    no      no      up      no       no
-no     m_left   m_down  m_right no      no      TRANS    wm_left left    down    right    wm_right
-p_left p_up     no      p_down  p_right TRANS   TRANS    no      home    no      end      no
-TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
+m_paste r_clk   m_up    l_clk   no      TRANS   TRANS   m_ac_2  l_clk   up      r_clk   no
+m_copy  m_left  m_down  m_right no      no      TRANS   wm_left left    down    right   wm_right
+p_right p_down  no      p_up    p_left  TRANS   TRANS   no      home    no      end     no
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP    TRANS   TRANS   TRANS   TRANS   TRANS
 
 LAYER _fn
-f1      f2      f3      f4      f5      f6      f7       f8      f9      f10      f11     f12
-no      no      no      no      no      no      brt-     brt+    vol-    vol+     no      vol_m
-mac     base    no      no      no      no      no       no      no      no       no      pause 
-TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
+f1      f2      f3      f4      f5      f6      f7      f8      f9      f10     f11     f12
+no      no      no      no      no      no      brt-    brt+    p_song  n_song  no      vol_m
+mac     base    no      no      no      no      no      no      vol-    vol+    no      pause 
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP    TRANS   TRANS   TRANS   TRANS   TRANS
