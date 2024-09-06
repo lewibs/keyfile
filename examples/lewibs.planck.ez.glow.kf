@@ -3,6 +3,11 @@ COMMENT this is my (lewibs) keyboard layout that I like to use for programming i
 INJECT colors.kf
 INJECT keys.kf
 
+COMMENT defined these here because they are specific to ZSA and i didnt want ZSA specific things in a global file.
+KEY m_ac_0 KC_MS_ACCEL0 c_yellow
+KEY m_ac_1 KC_MS_ACCEL1 c_yellow
+KEY m_ac_2 KC_MS_ACCEL2 c_yellow
+
 KEYBOARD LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _base _mac _mouse_mac _syms _nums _delete _mouse _fn _macro
 
 KEY d_line LCTL LSFT del c_red
