@@ -123,4 +123,8 @@ KEY p_down KC_MS_WH_DOWN c_pink
 KEY home KC_HOME c_pink
 KEY end KC_END c_pink
 
+KEY m_ac_0 QK_MOUSE_ACCELERATION_0 c_yellow
+KEY m_ac_1 QK_MOUSE_ACCELERATION_0 c_yellow
+KEY m_ac_2 QK_MOUSE_ACCELERATION_0 c_yellow
+
 KEY calc KC_CALCULATOR c_blue

@@ -16,7 +16,7 @@ KEY wm_left LALT left c_pink
 KEY w_right RCTL right c_pink
 KEY wm_right LALT right c_pink
 
-KEY search LGUI os c_yellow
+KEY search MOD_LGUI os c_yellow
 KEY fn MO _fn c_yellow
 KEY syms MO _syms c_yellow
 KEY nums MO _nums c_yellow
@@ -52,7 +52,7 @@ LAYER _mac
 q       w       e       r       t       del     bac      y       u       i       o       p
 a       s       d       f       g       '       enter    h       j       k       l       ;
 z       x       c       v       b       esc     tab      n       m       ,       .       /    
-cmd     ctl     fn      sft     syms    space   SKIP     nums   m_mouse macro   search   opt
+cmd     opt     fn      sft     syms    space   SKIP     nums   m_mouse macro   search   ctl
 
 LAYER _macro
 no      m_while m_else  no      no      TRANS   TRANS    no      no      m_elif  no       no            
@@ -80,7 +80,7 @@ no      no      no      no      no      TRANS   TRANS    no      no      no     
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
 
 LAYER _mouse
-no     r_clk    m_up    l_clk   no      TRANS   TRANS    no      no      up      no       no
+no     r_clk    m_up    l_clk   no      TRANS   TRANS    m_ac_0  m_ac_1  up      m_ac_2   no
 no     m_left   m_down  m_right no      no      TRANS    w_left  left    down    right    w_right
 p_left p_up     no      p_down  p_right TRANS   TRANS    no      home    no      end      no
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
