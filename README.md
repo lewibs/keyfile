@@ -191,6 +191,7 @@ More Examples: https://github.com/lewibs/keyfile/blob/main/examples
 * rules.mk!!!!
 * add a mod_pass key that applys a mod from a upper level to a lower level
 * add a bitmap_key that turns on layer a then b at the same time
+* Fix the bad path for a kf infinate recursion issue. to duplicate just give a bad path.
 
 ## Build:
 python ./src/keyfile.py -i C:\Users\lewibs\github\keyfile\examples\lewibs.planck.ez.glow.kf -n keyboard -o ./examples/output

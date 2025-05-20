@@ -64,7 +64,7 @@ def parse_keyfile(path:str)->None:
         if PATH in path:
             raise ParserException(f"File Not Found: {path}")
         else:
-            return parse_keyfile(os.path.join(PATH, "misc", path))
+            return parse_keyfile(os.path.join(PATH, "..", "misc", path))
     except ParserException as e:
         ERROR_STACK.append(f"{line_number} | {line}")
         ERROR_STACK.append(f"{path}")

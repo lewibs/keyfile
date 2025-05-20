@@ -34,7 +34,8 @@ KEY nums MO _math c_yellow
 KEY mouse MO _mouse c_yellow
 KEY macro MO _macro c_yellow
 KEY mac TG _mac c_orange
-KEY m_mouse MO _mouse_mac c_orange
+KEY m_mouse MO_MASK _mouse _mouse_mac c_orange
+COMMENT KEY m_mouse MO _mouse_mac c_orange
 
 KEY DUAL _symbols _math _delete
 
@@ -87,7 +88,7 @@ no      no      no      no      no      TRANS   TRANS    no      no      no     
 no      no      d_word  del     no      no      TRANS    no      bac     b_word  no       no
 no      no      no      no      no      TRANS   TRANS    no      no      no      no       no
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS    TRANS
-
+COMMENT in mac mode the above is macked by the below
 LAYER _mac_delete
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS
 TRANS   TRANS   dm_word TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   bm_word TRANS   TRANS
@@ -98,7 +99,7 @@ no      r_clk    m_up    l_clk   paste   TRANS   TRANS    m_ac_2  l_clk   up    
 no      m_left   m_down  m_right copy    no      TRANS    w_left  left    down    right   w_right
 p_left  p_up     no      p_down  p_right TRANS   TRANS    home    no      no      no      end
 TRANS   TRANS    TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS   TRANS
-
+COMMENT in mac mode is above is masked by the below
 LAYER _mouse_mac
 TRANS   TRANS   TRANS   TRANS   m_paste TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS
 TRANS   TRANS   TRANS   TRANS   m_copy  TRANS   TRANS   wm_left TRANS   TRANS   TRANS   wm_right
