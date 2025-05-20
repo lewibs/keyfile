@@ -9,6 +9,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case DUMMY_INIT_VAL:
         return true;
+INSERT_MASK_MACROS
 INSERT_MACROS
   }
   return true;
@@ -23,6 +24,23 @@ INSERT_MACROS
         if (record->event.pressed) {OPEN}
             SEND_STRING_DELAY("{string}", {delay});
         {CLOSE}
+        break;
+'''
+
+    def make_layer_mask_macro(code, masks):
+        OPEN = "{"
+        CLOSE = "}"
+        on_lines = "\n            ".join([f"layer_on({mask});" for mask in masks])
+        off_lines = "\n            ".join([f"layer_off({mask});" for mask in reversed(masks)])
+    
+        return f'''
+    case {code}:
+        if (record->event.pressed) {OPEN}
+            {on_lines}
+        {CLOSE} else {OPEN}
+            {off_lines}
+        {CLOSE}
+        return false;
         break;
 '''
 
@@ -139,9 +157,11 @@ bool rgb_matrix_indicators_user(void) {
     DUAL_INJECTABLE = ""
     KEY_CODE_INJECTABLE = "DUMMY_INIT_VAL = SAFE_RANGE,\n"
     MACRO_INJECTABLE = ""
+    LAYER_MASK_INJECTABLE = ""
 
 
     for sentence in sentences:
+        print(sentence)
         if sentence.type == Token.KEYBOARD:
             KEY_MAP = KEY_MAP.replace("INSERT_ROWS", sentence.rows())
             KEY_MAP = KEY_MAP.replace("INSERT_COLS", sentence.cols())
@@ -163,9 +183,13 @@ bool rgb_matrix_indicators_user(void) {
             KEY_INJECTABLE = create_key_map_layer(KEY_INJECTABLE, layer_name, MACRO, keys)
             LED_INJECTABLE = create_led_map_layer(LED_INJECTABLE, layer_name, colors)
         elif sentence.type == Token.KEY:
+            print(sentence.key_type())
             if sentence.key_type() == GlobalDefinitions.DUAL:
                 layers = sentence.layers()
                 DUAL_INJECTABLE += create_dual_layer(layers[0], layers[1], layers[2]) + "\n"
+            elif sentence.key_type() == GlobalDefinitions.MASK:
+                KEY_CODE_INJECTABLE += f"{sentence.name()},\n"
+                LAYER_MASK_INJECTABLE += make_layer_mask_macro(sentence.name(), sentence.masks())
             elif sentence.key_type() == GlobalDefinitions.MACRO:
                 KEY_CODE_INJECTABLE += f"{sentence.name()},\n"
                 MACRO_INJECTABLE += make_send_string_macro(sentence.name(), sentence.string(), 40) 
@@ -184,6 +208,7 @@ bool rgb_matrix_indicators_user(void) {
     DUAL_LAYERS = DUAL_LAYERS.replace("INSERT_DUAL_LAYER", DUAL_INJECTABLE)
     KEY_CODES = KEY_CODES.replace("INSERT_KEY_CODES", KEY_CODE_INJECTABLE)
     MACROS = MACROS.replace("INSERT_MACROS", MACRO_INJECTABLE)
+    MACROS = MACROS.replace("INSERT_MASK_MACROS", LAYER_MASK_INJECTABLE)
 
     c_code = f"{HEADER}{KEY_CODES}{LAYER_NAMES}{KEY_MAP}{LED_MAP}{DUAL_LAYERS}{RGB_MATRIX_FUNCTION}{MACROS}"
 

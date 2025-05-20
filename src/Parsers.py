@@ -34,6 +34,7 @@ class GlobalDefinitions:
     SKIP="SKIP"
     TRANS="TRANS"
     MACRO="MACRO"
+    MASK="MASK"
 
 SENTENCES = {}
 SENTENCES_ARR = []
@@ -41,7 +42,7 @@ FILES = {}
 KEY_MODIFIERS = {"LSFT", "RSFT", "LCTL", "RCTL", "LALT", "RALT", "LGUI", "RGUI"}
 LAYER_MODIFIERS = {"MO", "TG", "TT", "DF"}
 
-def parse_keyfile(path:str)->None:
+def parse_keyfile(path:str):
     if path in FILES:
         return []
 
@@ -108,15 +109,16 @@ def _is_layer_modifier(word:str) -> bool:
 def _is_key_modifier(word:str) -> bool:
     return word in KEY_MODIFIERS
 
-def _is_modifier(word: str) -> bool:
-    return _is_key_modifier(word) or _is_layer_modifier(word)
-
 class BaseSentence():
     def __init__(self, sentence_type, grammer):
         self.type = sentence_type
         self.grammer = grammer
         self.words = []
         self._name = None
+    
+    def __str__(self):
+        return f"{self._name} {self.type} {self.words}"
+
 
     def is_complete(self):
         if len(self.grammer) == 0:
@@ -167,6 +169,7 @@ class BaseSentence():
             raise ParserException("Value Error: Not a uint")
 
     def consume_ref(self, token_type:str, word:str):
+        print("CONSUMEING", token_type, word)
         if token_type not in Token.__dict__.values():
             raise ParserException("Syntax Error: Not a supported token")
 
@@ -184,6 +187,7 @@ class BaseSentence():
             self.consume_ref(Token.KEY, word)
 
     def consume_layer_ref(self, word:str):
+        print(word)
         self.consume_ref(Token.LAYER, word)
 
     def consume_declare(self, sentence_type, word):
@@ -193,14 +197,14 @@ class BaseSentence():
         self.consume_declare(Token.LAYER, word)
 
     def consume_keycode(self, word:str):
-        if _is_modifier(word):
-            if _is_key_modifier(word):
-                self.grammer.insert(0, Words.KEY_REF)
-                self.grammer.insert(0, Words.KEY_MODIFIER)
-            elif _is_layer_modifier(word):
-                self.grammer.insert(0, Words.LAYER_REF)
-
-
+        if _is_key_modifier(word):
+            print("key modifier", word)
+            self.grammer.insert(0, Words.KEY_REF)
+            self.grammer.insert(0, Words.KEY_MODIFIER)
+        elif _is_layer_modifier(word):
+            print("layermod", word)
+            self.grammer.insert(0, Words.LAYER_REF)
+       
     def consume_key_modifier(self, word: str):
         if not _is_key_modifier(word):
             if _is_keycode(word):
@@ -256,6 +260,8 @@ class KeySentence(BaseSentence):
             KeySentence._dual_keys += 1
             word = f"{GlobalDefinitions.DUAL}_{KeySentence._dual_keys}"
             self.grammer += [Words.LAYER_REF, Words.LAYER_REF, Words.LAYER_REF]
+        elif word == GlobalDefinitions.MASK:
+            self.grammer += [Words.INITIALIZE, Words.LAYER_REF, Words.LAYER_REF, Words.COLOR_REF]
         elif word == GlobalDefinitions.TRANS:
             self.words.append("KC_TRANSPARENT")
         elif word == GlobalDefinitions.SKIP:
@@ -284,6 +290,11 @@ class KeySentence(BaseSentence):
             raise ParserException("Usage error: trying to get layers on a normal key")
     
         return self.words[2:]
+
+    def masks(self):
+        if self.key_type() != GlobalDefinitions.MASK:
+            raise ParserException("Usage error: trying to get mask layers on a non mask key")
+        return self.words[3:5]
 
     def keycode(self):
         if self.key_type() == GlobalDefinitions.MACRO:
