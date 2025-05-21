@@ -40,6 +40,9 @@ KEY MASK m_mouse _mouse _mouse_mac c_orange
 KEY COMBO 2 _symbols _math _delete
 KEY COMBO 3 _mac _symbols _math _mac_delete
 
+STRING print System.out.println(
+KEY MACRO m_pnt print c_cyan
+
 STRING for for
 KEY MACRO m_for for c_cyan
 STRING while while
@@ -67,7 +70,7 @@ TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   
 cmd     opt     TRANS   TRANS   TRANS   TRANS   SKIP    TRANS   m_mouse TRANS   m_find  ctl
 
 LAYER _macro
-no      m_while m_else  no      no      TRANS   TRANS    no      no      m_elif  no      no            
+no      m_while m_else  no      no      TRANS   TRANS    no      no      m_elif  no      m_pnt            
 no      no      no      m_for   no      `       TRANS    no      no      no      no      no          
 no      no      m_const no      m_brew  TRANS   TRANS    no      no      no      no      no        
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS   TRANS

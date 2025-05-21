@@ -192,5 +192,10 @@ More Examples: https://github.com/lewibs/keyfile/blob/main/examples
 * Fix the bad path for a kf infinate recursion issue. to duplicate just give a bad path.
 * FIX the transparent color bug, where when you use TRANS it does not get the lower level rgb color.
 
-## Build:
-python ./src/keyfile.py -i C:\Users\lewibs\github\keyfile\examples\lewibs.planck.ez.glow.kf -n keyboard -o ./examples/output
+## Build
+```
+python3 ./src/keyfile.py -i ~/github/keyfile/examples/lewibs.nvim.planck.ez.glow.kf -n keyboard -o ./examples/nvim
+cp ./examples/nvim/keyboard/config.h ~/qmk_firmware/keyboards/zsa/planck_ez/keymaps/lewibs/config.h
+cp ./examples/nvim/keyboard/keymap.c ~/qmk_firmware/keyboards/zsa/planck_ez/keymaps/lewibs/keymap.c
+qmk flash -kb planck/ez/glow -km lewibs
+```

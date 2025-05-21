@@ -16,13 +16,13 @@ INSERT_MACROS
 }
 """
 
-    def make_send_string_macro(code, string, delay):
+    def make_send_string_macro(code, string):
         OPEN = "{"
         CLOSE = "}"
         return f'''
     case {code}:
         if (record->event.pressed) {OPEN}
-            SEND_STRING_DELAY("{string}", {delay});
+            SEND_STRING("{string}");
         {CLOSE}
         break;
 '''
@@ -199,7 +199,7 @@ bool rgb_matrix_indicators_user(void) {
                 LAYER_MASK_INJECTABLE += make_layer_mask_macro(sentence.name(), sentence.masks())
             elif sentence.key_type() == GlobalDefinitions.MACRO:
                 KEY_CODE_INJECTABLE += f"{sentence.name()},\n"
-                MACRO_INJECTABLE += make_send_string_macro(sentence.name(), sentence.string(), 40) 
+                MACRO_INJECTABLE += make_send_string_macro(sentence.name(), sentence.string()) 
 
 
    
