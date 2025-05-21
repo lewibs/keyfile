@@ -8,7 +8,8 @@ KEY m_ac_0 KC_MS_ACCEL0 c_yellow
 KEY m_ac_1 KC_MS_ACCEL1 c_yellow
 KEY m_ac_2 KC_MS_ACCEL2 c_yellow
 
-KEYBOARD LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _base _mac _mouse_mac _symbols _math _delete _mouse _fn _macro
+COMMENT masking works by putting the rightmost element over the left one, this means mac stuff must be on the right!
+KEYBOARD LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _base _symbols _math _delete _mouse _fn _macro _mac _mouse_mac _mac_delete
 
 KEY d_line LCTL LSFT del c_red
 KEY d_word LCTL del c_red
@@ -17,9 +18,9 @@ KEY b_word LCTL bac c_red
 KEY bm_word LALT bac c_red
 KEY b_line LCTL LSFT bac c_red
 KEY w_left LCTL left c_pink
-KEY wm_left LALT left c_pink
+KEY wm_left LGUI left c_pink
 KEY w_right RCTL right c_pink
-KEY wm_right LALT right c_pink
+KEY wm_right LGUI right c_pink
 
 
 KEY m_find LGUI space c_yellow
@@ -35,7 +36,6 @@ KEY mouse MO _mouse c_yellow
 KEY macro MO _macro c_yellow
 KEY mac TG _mac c_orange
 KEY MASK m_mouse _mouse _mouse_mac c_orange
-COMMENT KEY m_mouse MO _mouse_mac c_orange
 
 KEY DUAL _symbols _math _delete
 
@@ -60,9 +60,9 @@ z       x       c       v       b       esc     enter    n       m       ,      
 ctl     alt     fn      sft     syms    space   SKIP     nums    mouse   macro   os      ctl
 
 LAYER _mac
-TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP    TRANS   TRANS   TRANS   TRANS   TRANS
-TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP    TRANS   TRANS   TRANS   TRANS   TRANS
-TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP    TRANS   TRANS   TRANS   TRANS   TRANS 
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS 
 cmd     opt     TRANS   TRANS   TRANS   TRANS   SKIP    TRANS   m_mouse TRANS   m_find  ctl
 
 LAYER _macro
@@ -93,6 +93,7 @@ LAYER _mac_delete
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS
 TRANS   TRANS   dm_word TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   bm_word TRANS   TRANS
 TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   TRANS
+TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP    TRANS   TRANS   TRANS   TRANS    TRANS
 
 LAYER _mouse
 no      r_clk    m_up    l_clk   paste   TRANS   TRANS    m_ac_2  l_clk   up      r_clk   no

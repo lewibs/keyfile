@@ -308,6 +308,10 @@ class KeySentence(BaseSentence):
 
         if self.name().startswith(GlobalDefinitions.SKIP):
             return "KC_NO"
+        
+        if self.key_type() == GlobalDefinitions.MASK:
+            return self.name()
+
 
         code = self.words[-2]
         modifiers = self.words[2:-2]
@@ -363,8 +367,11 @@ class LayerSentence(BaseSentence):
             if SENTENCES[key_ref].name() == GlobalDefinitions.SKIP:
                 continue
             elif SENTENCES[key_ref].name() == GlobalDefinitions.TRANS:
+                #TODO there is a bug with trans keys where their color is not based on the
+                # next level up, this means the keys look weird at times since everything turns white.
                 _base = SENTENCES[GlobalDefinitions.KEYBOARD].layers()[0]
                 color = SENTENCES[SENTENCES[_base].key_refs()[i]].color()
+                print(_base, color)
                 leds.append(color)
             else:
                 leds.append(SENTENCES[key_ref].color()) 
