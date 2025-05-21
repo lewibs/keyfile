@@ -187,10 +187,9 @@ More Examples: https://github.com/lewibs/keyfile/blob/main/examples
 
 ## TODO
 * set it up to run with QMK so it can make the .bin right away and delete the keymap files
-* need to make config.h generate
-* rules.mk!!!!
 * add a mod_pass key that applys a mod from a upper level to a lower level
 * Fix the bad path for a kf infinate recursion issue. to duplicate just give a bad path.
+* FIX the transparent color bug, where when you use TRANS it does not get the lower level rgb color.
 
 ## Build:
 python ./src/keyfile.py -i C:\Users\lewibs\github\keyfile\examples\lewibs.planck.ez.glow.kf -n keyboard -o ./examples/output

@@ -8,8 +8,8 @@ KEY m_ac_0 KC_MS_ACCEL0 c_yellow
 KEY m_ac_1 KC_MS_ACCEL1 c_yellow
 KEY m_ac_2 KC_MS_ACCEL2 c_yellow
 
-COMMENT masking works by putting the rightmost element over the left one, this means mac stuff must be on the right!
-KEYBOARD LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _base _symbols _math _delete _mouse _fn _macro _mac _mouse_mac _mac_delete
+COMMENT masking works by putting the rightmost element over the left one, this means mac stuff must be on the right of what they are masking!
+KEYBOARD LAYOUT_planck_grid MATRIX_ROWS MATRIX_COLS RGB_MATRIX_LED_COUNT _base _mac _symbols _math _delete _mac_delete _mouse _mouse_mac _fn _macro
 
 KEY d_line LCTL LSFT del c_red
 KEY d_word LCTL del c_red
