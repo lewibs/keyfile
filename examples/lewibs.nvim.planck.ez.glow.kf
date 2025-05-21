@@ -37,7 +37,8 @@ KEY macro MO _macro c_yellow
 KEY mac TG _mac c_orange
 KEY MASK m_mouse _mouse _mouse_mac c_orange
 
-KEY DUAL _symbols _math _delete
+KEY COMBO 2 _symbols _math _delete
+KEY COMBO 3 _mac _symbols _math _mac_delete
 
 STRING for for
 KEY MACRO m_for for c_cyan

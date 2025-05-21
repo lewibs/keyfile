@@ -17,7 +17,7 @@ All instructions start with a token. The parser will read subsequent lines as be
 | `INJECT`    | Includes external files or paths                         | `INJECT file_path`                            |
 | `COLOR`     | Defines a color with the name and HSV values (0-255)     | `COLOR identifier number number number`       |
 | `KEY`       | Defines a key with its name, key code, and color         | `KEY identifier modifier keycode color_ref`   |
-| `KEY DUAL`  | Defines a dual key action using layer references         | `KEY DUAL layer_ref layer_ref layer_ref`      |
+| `KEY COMBO`  | Defines a dual key action using layer references         | `KEY COMBO layer_ref layer_ref layer_ref`      |
 | `KEY SKIP`  | Indicates a key to be skipped if it does not exist       | `KEY SKIP` (Reserved, not to be initialized)  |
 | `KEY TRANS` | Defines a transparent layer                              | `KEY TRANS` (Reserved, not to be initialized) |
 | `KEY MACRO` | Defines a macro with a `SEND_STRING` call                | `KEY MACRO identifier string_ref color_ref`   |
@@ -42,7 +42,7 @@ COLOR c_macro 0 51 200
 STRING s_macro Hello World!
 KEY MACRO hi s_macro c_macro
 
-KEY DUAL _syms _nums _delete
+KEY COMBO _syms _nums _delete
 
 LAYER _base
 q       w       e       r       t       del     bac      y       u       i       o       p
@@ -71,7 +71,7 @@ More Examples: https://github.com/lewibs/keyfile/blob/main/examples
 - **Key**: Defines different types of keys.
   ```ebnf
   key ::= KEY MACRO identifier string_ref color_ref
-  key ::= KEY DUAL layer_ref layer_ref layer_ref
+  key ::= KEY COMBO layer_ref layer_ref layer_ref
   key ::= KEY TRANS
   key ::= KEY SKIP
   key ::= KEY identifier modifier key_ref color_ref
@@ -190,6 +190,6 @@ More Examples: https://github.com/lewibs/keyfile/blob/main/examples
 * add a mod_pass key that applys a mod from a upper level to a lower level
 * Fix the bad path for a kf infinate recursion issue. to duplicate just give a bad path.
 * FIX the transparent color bug, where when you use TRANS it does not get the lower level rgb color.
-
+* UPDATE THE README WITH MASK AND COMBO!
 ## Build:
 python ./src/keyfile.py -i C:\Users\lewibs\github\keyfile\examples\lewibs.planck.ez.glow.kf -n keyboard -o ./examples/output

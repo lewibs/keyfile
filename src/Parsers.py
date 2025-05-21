@@ -27,10 +27,11 @@ class Words:
     KEY_MODIFIER="key_modifier"
     LAYER_MODIFIER="layer_modifier"
     STRING="string"
+    COMBO_COUNT="combo_count"
 
 class GlobalDefinitions:
     KEYBOARD="keyboard"
-    DUAL="DUAL"
+    COMBO="COMBO"
     SKIP="SKIP"
     TRANS="TRANS"
     MACRO="MACRO"
@@ -169,7 +170,6 @@ class BaseSentence():
             raise ParserException("Value Error: Not a uint")
 
     def consume_ref(self, token_type:str, word:str):
-        print("CONSUMEING", token_type, word)
         if token_type not in Token.__dict__.values():
             raise ParserException("Syntax Error: Not a supported token")
 
@@ -187,7 +187,6 @@ class BaseSentence():
             self.consume_ref(Token.KEY, word)
 
     def consume_layer_ref(self, word:str):
-        print(word)
         self.consume_ref(Token.LAYER, word)
 
     def consume_declare(self, sentence_type, word):
@@ -198,11 +197,9 @@ class BaseSentence():
 
     def consume_keycode(self, word:str):
         if _is_key_modifier(word):
-            print("key modifier", word)
             self.grammer.insert(0, Words.KEY_REF)
             self.grammer.insert(0, Words.KEY_MODIFIER)
         elif _is_layer_modifier(word):
-            print("layermod", word)
             self.grammer.insert(0, Words.LAYER_REF)
        
     def consume_key_modifier(self, word: str):
@@ -214,6 +211,14 @@ class BaseSentence():
         
         self.grammer.insert(0, Words.KEY_MODIFIER)
     
+    def consume_combo_count(self, word:str):
+        if not word.isdigit():
+            raise ParserException(f"Syntax Error: {word} is not a valid COMBO_COUNT")
+        
+        for _ in range(int(word)+1): # +1 to account for the layer we are targeting
+            self.grammer.append(Words.LAYER_REF)
+
+
     def consume_layer_modifier(self, word:str):
         if not _is_layer_modifier(word):
             raise ParserException(f"Syntax Error: {word} is not a valid LAYER_MODIFIER")
@@ -245,7 +250,7 @@ class ColorSentence(BaseSentence):
         return "{" + ",".join(self.words[2:]) + "}"
 
 class KeySentence(BaseSentence):
-    _dual_keys = 0
+    _combo_keys = 0
 
     def __init__(self, token):
         super().__init__(Token.KEY, [Words.TOKEN, Words.INITIALIZE])
@@ -256,10 +261,10 @@ class KeySentence(BaseSentence):
         self.consume(token)
 
     def consume_initialize(self, word: str):
-        if word == GlobalDefinitions.DUAL:
-            KeySentence._dual_keys += 1
-            word = f"{GlobalDefinitions.DUAL}_{KeySentence._dual_keys}"
-            self.grammer += [Words.LAYER_REF, Words.LAYER_REF, Words.LAYER_REF]
+        if word == GlobalDefinitions.COMBO:
+            KeySentence._combo_keys += 1
+            word = f"{GlobalDefinitions.COMBO}_{KeySentence._combo_keys}"
+            self.grammer += [Words.COMBO_COUNT]
         elif word == GlobalDefinitions.MASK:
             self.grammer += [Words.INITIALIZE, Words.LAYER_REF, Words.LAYER_REF, Words.COLOR_REF]
         elif word == GlobalDefinitions.TRANS:
@@ -286,10 +291,10 @@ class KeySentence(BaseSentence):
         return None
 
     def layers(self):
-        if not self.name().startswith(GlobalDefinitions.DUAL):
+        if not self.name().startswith(GlobalDefinitions.COMBO):
             raise ParserException("Usage error: trying to get layers on a normal key")
     
-        return self.words[2:]
+        return self.words[3:]
 
     def masks(self):
         if self.key_type() != GlobalDefinitions.MASK:
@@ -300,7 +305,7 @@ class KeySentence(BaseSentence):
         if self.key_type() == GlobalDefinitions.MACRO:
             return self.name()
 
-        if self.name().startswith(GlobalDefinitions.DUAL):
+        if self.name().startswith(GlobalDefinitions.COMBO):
             raise ParserException("Usage error: trying to get keycode on a dual key")
         
         if self.name().startswith(GlobalDefinitions.TRANS):
@@ -332,7 +337,7 @@ class KeySentence(BaseSentence):
 
 
     def color(self):
-        if self.name().startswith(GlobalDefinitions.DUAL) or self.name().startswith(GlobalDefinitions.TRANS) or self.name().startswith(GlobalDefinitions.SKIP):
+        if self.name().startswith(GlobalDefinitions.COMBO) or self.name().startswith(GlobalDefinitions.TRANS) or self.name().startswith(GlobalDefinitions.SKIP):
             raise ParserException("Usage error: trying to get color on a dual key")
         
         return SENTENCES[self.words[-1]].color()
@@ -371,7 +376,6 @@ class LayerSentence(BaseSentence):
                 # next level up, this means the keys look weird at times since everything turns white.
                 _base = SENTENCES[GlobalDefinitions.KEYBOARD].layers()[0]
                 color = SENTENCES[SENTENCES[_base].key_refs()[i]].color()
-                print(_base, color)
                 leds.append(color)
             else:
                 leds.append(SENTENCES[key_ref].color()) 
