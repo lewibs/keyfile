@@ -27,18 +27,27 @@ INSERT_MACROS
         break;
 '''
 
+    def make_layer_rgb_priority(mask):
+       return f"""
+    if (layer_state & (1UL << {mask})) {"{"}
+        layer = {mask};
+    {"}"}
+""" 
+
     def make_layer_mask_macro(code, masks):
         OPEN = "{"
         CLOSE = "}"
-        on_lines = "\n            ".join([f"layer_on({mask});" for mask in masks])
-        off_lines = "\n            ".join([f"layer_off({mask});" for mask in reversed(masks)])
+        # on_lines = "\n            ".join([f"layer_on({mask});" for mask in masks])
+        # off_lines = "\n            ".join([f"layer_off({mask});" for mask in reversed(masks)])
     
         return f'''
     case {code}:
         if (record->event.pressed) {OPEN}
-            {on_lines}
+            layer_on({masks[0]});
+            layer_on({masks[1]});
         {CLOSE} else {OPEN}
-            {off_lines}
+            layer_off({masks[1]});
+            layer_off({masks[0]});
         {CLOSE}
         return false;
         break;
@@ -140,7 +149,13 @@ void keyboard_post_init_user(void) {
 }
 
 bool rgb_matrix_indicators_user(void) {
-  int layer = biton32(layer_state);
+  int layer = -1;
+
+  INSERT_RGB_LAYER_PICK_PRIORITY
+
+  if (layer == -1) {
+    layer = biton32(layer_state);
+  }
 
   for (int i = 0; i < INSERT_LED_COUNT; i++) {
     HSV hsv = {
@@ -167,6 +182,7 @@ bool rgb_matrix_indicators_user(void) {
     KEY_CODE_INJECTABLE = "DUMMY_INIT_VAL = SAFE_RANGE,\n"
     MACRO_INJECTABLE = ""
     LAYER_MASK_INJECTABLE = ""
+    PRIORITY_RGB_INJECTABLE = ""
 
 
     for sentence in sentences:
@@ -197,6 +213,7 @@ bool rgb_matrix_indicators_user(void) {
             elif sentence.key_type() == GlobalDefinitions.MASK:
                 KEY_CODE_INJECTABLE += f"{sentence.name()},\n"
                 LAYER_MASK_INJECTABLE += make_layer_mask_macro(sentence.name(), sentence.masks())
+                PRIORITY_RGB_INJECTABLE += make_layer_rgb_priority(sentence.masks()[0]) + "\n"
             elif sentence.key_type() == GlobalDefinitions.MACRO:
                 KEY_CODE_INJECTABLE += f"{sentence.name()},\n"
                 MACRO_INJECTABLE += make_send_string_macro(sentence.name(), sentence.string()) 
@@ -216,6 +233,9 @@ bool rgb_matrix_indicators_user(void) {
     KEY_CODES = KEY_CODES.replace("INSERT_KEY_CODES", KEY_CODE_INJECTABLE)
     MACROS = MACROS.replace("INSERT_MACROS", MACRO_INJECTABLE)
     MACROS = MACROS.replace("INSERT_MASK_MACROS", LAYER_MASK_INJECTABLE)
+    #TODO this does not work, it does not turn off the layer...
+    # RGB_MATRIX_FUNCTION = RGB_MATRIX_FUNCTION.replace("INSERT_RGB_LAYER_PICK_PRIORITY", "")
+    RGB_MATRIX_FUNCTION = RGB_MATRIX_FUNCTION.replace("INSERT_RGB_LAYER_PICK_PRIORITY", PRIORITY_RGB_INJECTABLE)
 
     c_code = f"{HEADER}{KEY_CODES}{LAYER_NAMES}{KEY_MAP}{LED_MAP}{COMBO_LAYERS}{RGB_MATRIX_FUNCTION}{MACROS}"
 

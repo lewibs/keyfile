@@ -79,7 +79,18 @@ void keyboard_post_init_user(void) {
 }
 
 bool rgb_matrix_indicators_user(void) {
-  int layer = biton32(layer_state);
+  int layer = -1;
+
+  
+    if (layer_state & (1UL << _mouse)) {
+        layer = _mouse;
+    }
+
+
+
+  if (layer == -1) {
+    layer = biton32(layer_state);
+  }
 
   for (int i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
     HSV hsv = {
