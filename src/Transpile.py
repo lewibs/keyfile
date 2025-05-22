@@ -210,6 +210,9 @@ bool rgb_matrix_indicators_user(void) {
             if sentence.key_type() == GlobalDefinitions.COMBO:
                 layers = sentence.layers()
                 COMBO_INJECTABLE += create_combo_layer(layers[-1], layers[:-1]) + "\n"
+                #TODO update the combo layer to have a target layer color?
+                #TODO why does _mac_delete work how I want it to when I dont say it needs to mask????
+                #PRIORITY_RGB_INJECTABLE += make_layer_rgb_priority()
             elif sentence.key_type() == GlobalDefinitions.MASK:
                 KEY_CODE_INJECTABLE += f"{sentence.name()},\n"
                 LAYER_MASK_INJECTABLE += make_layer_mask_macro(sentence.name(), sentence.masks())
