@@ -190,7 +190,7 @@ More Examples: https://github.com/lewibs/keyfile/blob/main/examples
 * set it up to run with QMK so it can make the .bin right away and delete the keymap files
 * add a mod_pass key that applys a mod from a upper level to a lower level
 * Fix the bad path for a kf infinate recursion issue. to duplicate just give a bad path.
-* FIX the transparent color bug, where when you use TRANS it does not get the lower level rgb color.
+* Make a use layer rgb function for dual press keys with masks. This never does the correct color anymore!
 
 ## Build
 ```
@@ -199,3 +199,25 @@ cp ./examples/nvim/keyboard/config.h ~/qmk_firmware/keyboards/zsa/planck_ez/keym
 cp ./examples/nvim/keyboard/keymap.c ~/qmk_firmware/keyboards/zsa/planck_ez/keymaps/lewibs/keymap.c
 qmk flash -kb planck/ez/glow -km lewibs
 ```
+
+
+Issue with layers now showing coors for mac delete can be fixed with this
+```
+    if (layer_state & (1UL << _mouse)) {
+        layer = _mouse;
+    }
+
+
+    if (layer_state & (1UL << _symbols)) {
+        layer = _symbols;
+    }
+
+    if (layer_state & (1UL << _mac_delete)) {
+        layer = _delete;
+    }
+
+    if (layer_state & (1UL << _delete)) {
+        layer = _delete;
+    }
+```
+

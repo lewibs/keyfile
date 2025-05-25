@@ -29,8 +29,8 @@ KEY cl_tab LCTL LSFT tab c_green
 
 KEY rm_work LCTL right c_green
 KEY lm_work LCTL left c_green
-KEY clm_tab LCTL tab c_green
-KEY crm_tab LCTL LSFT tab c_green
+KEY crm_tab LCTL tab c_green
+KEY clm_tab LCTL LSFT tab c_green
 
 KEY m_find LGUI space c_yellow
 KEY copy LCTL c c_orange
@@ -56,7 +56,7 @@ KEY COMBO 2 _mac_symbols _math _mac_delete
 STRING print System.out.println(
 KEY MACRO m_pnt print c_cyan
 
-STRING check - [ ]
+STRING check - [ ] 
 KEY MACRO m_check check c_cyan
 
 STRING for for
@@ -125,7 +125,7 @@ TRANS   TRANS   TRANS   TRANS   TRANS   TRANS   SKIP    TRANS   TRANS   TRANS   
 LAYER _mouse
 no      r_clk    m_up    l_clk   paste   TRANS   TRANS    m_ac_2  l_clk   up      r_clk   no
 no      m_left   m_down  m_right copy    no      TRANS    w_left  left    down    right   w_right
-p_left  p_up     no      p_down  p_right TRANS   TRANS    home    no      no      no      end
+p_left  p_up     no      p_down  p_right TRANS   TRANS    home    enter   no      no      end
 TRANS   TRANS    TRANS   TRANS   TRANS   TRANS   SKIP     TRANS   TRANS   TRANS   TRANS   TRANS
 COMMENT in mac mode is above is masked by the below
 LAYER _mouse_mac
